@@ -2,6 +2,7 @@ package com.example.quoteapp
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.view.View
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import androidx.navigation.fragment.NavHostFragment
 
@@ -16,7 +17,19 @@ class MainActivity : AppCompatActivity() {
 
         val bottomNav = findViewById<BottomNavigationView>(R.id.bottom_nav)
 
-        // ❌ 不要再用這行了：bottomNav.setupWithNavController(navController)
+        // --- 新增這段程式碼 ---
+        // 監聽頁面切換，如果在「新增」頁面，就隱藏底部導覽列
+        navController.addOnDestinationChangedListener { _, destination, _ ->
+            when (destination.id) {
+                R.id.addQuoteFragment, R.id.addCategoryFragment -> {
+                    bottomNav.visibility = View.GONE
+                }
+                else -> {
+                    bottomNav.visibility = View.VISIBLE
+                }
+            }
+        }
+        // ---------------------
 
         bottomNav.setOnItemSelectedListener { item ->
             when (item.itemId) {

@@ -32,4 +32,16 @@
             app:argType="string" />
     </fragment>
 
+    <!-- 新增名言頁面 -->
+    <fragment
+        android:id="@+id/addQuoteFragment"
+        android:name="com.example.quoteapp.AddQuoteFragment"
+        android:label="新增名言" />
+
+    <!-- 新增種類頁面 -->
+    <fragment
+        android:id="@+id/addCategoryFragment"
+        android:name="com.example.quoteapp.AddCategoryFragment"
+        android:label="新增種類" />
+
 </navigation>

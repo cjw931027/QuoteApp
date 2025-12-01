@@ -1,5 +1,6 @@
 package com.example.quoteapp
 
+import android.net.Uri
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -27,7 +28,20 @@ class CategoryAdapter(
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val item = categories[position]
-        holder.img.setImageResource(item.imageRes)
+
+        // --- 修改顯示邏輯 ---
+        if (item.imageUri != null) {
+            // 如果有自訂圖片 URI，就解析並顯示
+            holder.img.setImageURI(Uri.parse(item.imageUri))
+            // 為了避免圖片變形，通常建議設為 CenterCrop
+            holder.img.scaleType = ImageView.ScaleType.CENTER_CROP
+        } else {
+            // 否則顯示內建資源圖示
+            holder.img.setImageResource(item.imageRes)
+            holder.img.scaleType = ImageView.ScaleType.CENTER_CROP
+        }
+        // ------------------
+
         holder.title.text = item.name
 
         holder.itemView.setOnClickListener {

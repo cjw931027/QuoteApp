@@ -2,7 +2,7 @@ package com.example.quoteapp
 
 import android.os.Bundle
 import android.view.View
-import android.widget.PopupMenu
+import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -12,6 +12,7 @@ import androidx.navigation.fragment.findNavController
 class CategoryFragment : Fragment(R.layout.fragment_category) {
 
     private lateinit var recycler: RecyclerView
+    private lateinit var adapter: CategoryAdapter
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -23,7 +24,7 @@ class CategoryFragment : Fragment(R.layout.fragment_category) {
         toolbar.setOnMenuItemClickListener { item ->
             when (item.itemId) {
                 R.id.action_add -> {
-                    showAddMenu(toolbar)
+                    showAddDialog() // 改成呼叫顯示對話框的方法
                     true
                 }
                 else -> false
@@ -32,16 +33,21 @@ class CategoryFragment : Fragment(R.layout.fragment_category) {
 
         recycler = view.findViewById(R.id.recycler_category)
 
-        val categoryList = listOf(
-            Category("友情", R.drawable.cat_friendship),
-            Category("人生", R.drawable.cat_life),
-            Category("愛情", R.drawable.cat_love),
-            Category("勵志", R.drawable.cat_motivation),
-            Category("工作", R.drawable.cat_work),
-            Category("其他", R.drawable.cat_others)
-        )
+        setupRecyclerView()
+    }
 
-        val adapter = CategoryAdapter(categoryList) { category ->
+    // 當從新增頁面回來時，刷新列表以顯示新種類
+    override fun onResume() {
+        super.onResume()
+        if (::adapter.isInitialized) {
+            adapter.notifyDataSetChanged()
+        }
+    }
+
+    private fun setupRecyclerView() {
+        val categoryList = DataManager.categories
+
+        adapter = CategoryAdapter(categoryList) { category ->
             val bundle = Bundle().apply {
                 putString("category_title", category.name)
             }
@@ -56,25 +62,22 @@ class CategoryFragment : Fragment(R.layout.fragment_category) {
         recycler.adapter = adapter
     }
 
-    // 彈出右上角選單
-    private fun showAddMenu(anchor: View) {
-        val popup = PopupMenu(requireContext(), anchor)
-        popup.menu.add("新增名言")
-        popup.menu.add("新增分類")
+    // 顯示「新增」對話框
+    private fun showAddDialog() {
+        val options = arrayOf("新增名言", "新增種類")
 
-        popup.setOnMenuItemClickListener { item ->
-            when (item.title) {
-                "新增名言" -> {
-                    // TODO: 開啟新增名言頁面
-                }
-
-                "新增分類" -> {
-                    // TODO: 開啟新增分類頁面
+        AlertDialog.Builder(requireContext())
+            .setTitle("請選擇新增項目")
+            .setItems(options) { _, which ->
+                when (which) {
+                    0 -> { // 點擊 "新增名言"
+                        findNavController().navigate(R.id.addQuoteFragment)
+                    }
+                    1 -> { // 點擊 "新增種類"
+                        findNavController().navigate(R.id.addCategoryFragment)
+                    }
                 }
             }
-            true
-        }
-
-        popup.show()
+            .show()
     }
 }

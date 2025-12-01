@@ -6,7 +6,7 @@ object DataManager {
     val categories = mutableListOf(
         Category("勵志", R.drawable.cat_motivation),
         Category("人生", R.drawable.cat_life),
-        Category("愛情", R.drawable.cat_love),        // 確認真的有這張圖
+        Category("愛情", R.drawable.cat_love),
         Category("工作", R.drawable.cat_work),
         Category("友誼", R.drawable.cat_friendship),
         Category("其他", R.drawable.cat_others),
@@ -28,10 +28,11 @@ object DataManager {
     // --- 收藏 ---
     val favorites = mutableListOf<Quote>()
 
-    // --- 新增分類功能 ---
-    fun addCategory(name: String) {
+    // --- 修改：新增分類功能 ---
+    // 增加 imageUri 參數，預設為 null
+    fun addCategory(name: String, iconRes: Int, imageUri: String? = null) {
         if (categories.none { it.name == name }) {
-            categories.add(Category(name, R.drawable.cat_others)) // 先用預設圖片
+            categories.add(Category(name, iconRes, imageUri))
         }
     }
 
