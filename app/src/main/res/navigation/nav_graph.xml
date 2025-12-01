@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    app:startDestination="@id/homeFragment">
+
+    <fragment
+        android:id="@+id/homeFragment"
+        android:name="com.example.quoteapp.HomeFragment"
+        android:label="首頁" />
+
+    <fragment
+        android:id="@+id/categoryFragment"
+        android:name="com.example.quoteapp.CategoryFragment"
+        android:label="分類" />
+
+    <fragment
+        android:id="@+id/favoriteFragment"
+        android:name="com.example.quoteapp.FavoriteFragment"
+        android:label="收藏" />
+
+    <fragment
+        android:id="@+id/settingsFragment"
+        android:name="com.example.quoteapp.SettingsFragment"
+        android:label="設定" />
+
+    <fragment
+        android:id="@+id/categoryQuotesFragment"
+        android:name="com.example.quoteapp.CategoryQuotesFragment"
+        android:label="分類內容" >
+        <argument
+            android:name="category_title"
+            app:argType="string" />
+    </fragment>
+
+</navigation>
