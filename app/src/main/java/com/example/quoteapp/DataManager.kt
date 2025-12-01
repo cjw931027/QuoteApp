@@ -49,4 +49,7 @@ object DataManager {
             favorites.add(quote)
         }
     }
+
+    var fontSize: Float = 18f // 預設字體大小
+    var isDarkMode: Boolean = false // 預設淺色模式
 }

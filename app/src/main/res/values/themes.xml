@@ -1,7 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <style name="Theme.QuoteApp" parent="Theme.Material3.Light.NoActionBar">
+    <!-- 改為 DayNight 主題，支援深色模式切換 -->
+    <style name="Theme.QuoteApp" parent="Theme.Material3.DayNight.NoActionBar">
+        <!-- 主要品牌顏色 -->
+        <item name="colorPrimary">#5C8AE6</item>
+        <item name="colorOnPrimary">#FFFFFF</item>
+        <item name="colorSecondary">#2E5CB8</item>
+        <item name="colorOnSecondary">#FFFFFF</item>
+
+        <!-- 狀態列顏色 -->
+        <item name="android:statusBarColor">?attr/colorSurface</item>
+        <item name="android:windowLightStatusBar">true</item> <!-- 淺色模式下狀態列文字為黑色 -->
     </style>
 
 </resources>

@@ -35,6 +35,11 @@ class QuoteAdapter(
         holder.textQuote.text = quote.text
         holder.textAuthor.text = quote.author
 
+        // --- 關鍵修改：套用字體設定 ---
+        // 從 DataManager 讀取最新的字體大小
+        holder.textQuote.textSize = DataManager.fontSize
+        // --------------------------
+
         // 檢查是否已收藏
         val isFavorite = DataManager.favorites.contains(quote)
         updateFavoriteIcon(holder.btnFavorite, isFavorite)
