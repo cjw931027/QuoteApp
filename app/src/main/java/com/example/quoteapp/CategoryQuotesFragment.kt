@@ -8,7 +8,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.appbar.MaterialToolbar
 import androidx.navigation.fragment.findNavController
 
-class CategoryQuotesFragment : Fragment(R.layout.fragment_category_quotes) {
+class   CategoryQuotesFragment : Fragment(R.layout.fragment_category_quotes) {
 
     private lateinit var recycler: RecyclerView
     private lateinit var adapter: QuoteAdapter
@@ -17,8 +17,8 @@ class CategoryQuotesFragment : Fragment(R.layout.fragment_category_quotes) {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        val toolbar = view.findViewById<MaterialToolbar>(R.id.toolbar_quotes)
-        recycler = view.findViewById(R.id.recycler_quotes)
+        val toolbar = view.findViewById<MaterialToolbar>(R.id.toolbar_category) // 原本是 toolbar_quotes
+        recycler = view.findViewById(R.id.recycler_category) // 原本是 recycler_quotes
 
         title = arguments?.getString("category_title") ?: "分類內容"
 

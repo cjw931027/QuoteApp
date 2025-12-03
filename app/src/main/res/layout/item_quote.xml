@@ -1,77 +1,73 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<com.google.android.material.card.MaterialCardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="?android:attr/colorBackground"
-    android:fitsSystemWindows="true">
+    android:layout_height="wrap_content"
+    android:layout_marginHorizontal="16dp"
+    android:layout_marginVertical="8dp"
+    app:cardCornerRadius="16dp"
+    app:cardElevation="4dp"
+    app:cardBackgroundColor="?attr/colorSurface">
 
-    <!-- 標題列 -->
-    <com.google.android.material.appbar.MaterialToolbar
-        android:id="@+id/toolbar_favorite"
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="?attr/actionBarSize"
-        android:background="?android:attr/colorBackground"
-        app:title="我的最愛"
-        app:titleTextColor="?android:attr/textColorPrimary"
-        app:titleCentered="true"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <!-- 收藏列表 -->
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/recycler_favorites"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:padding="16dp"
-        android:clipToPadding="false"
-        app:layout_constraintTop_toBottomOf="@id/toolbar_favorite"
-        app:layout_constraintBottom_toBottomOf="parent" />
-
-    <!-- 空狀態顯示 (預設隱藏) -->
-    <LinearLayout
-        android:id="@+id/layout_empty_state"
-        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:gravity="center"
-        android:visibility="gone"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent">
+        android:padding="16dp">
 
-        <!-- 圓形背景的愛心圖示 -->
-        <FrameLayout
-            android:layout_width="100dp"
-            android:layout_height="100dp"
-            android:background="@drawable/bg_circle_blue_light">
-
-            <ImageView
-                android:layout_width="40dp"
-                android:layout_height="40dp"
-                android:layout_gravity="center"
-                android:src="@drawable/ic_heart_outline"
-                app:tint="#2E5CB8"/>
-        </FrameLayout>
-
+        <!-- 分類標籤 -->
         <TextView
+            android:id="@+id/text_category_label"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="收藏夾是空的"
-            android:textSize="20sp"
-            android:textStyle="bold"
+            android:text="分類"
+            android:textSize="12sp"
+            android:textColor="?android:attr/colorPrimary"
+            android:background="@drawable/bg_input_area"
+            android:paddingHorizontal="8dp"
+            android:paddingVertical="4dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <!-- 收藏按鈕 -->
+        <ImageView
+            android:id="@+id/btn_favorite"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:src="@drawable/ic_heart_outline"
+            app:tint="#2E5CB8"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:clickable="true"
+            android:focusable="true"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <!-- 名言內容 -->
+        <TextView
+            android:id="@+id/text_quote"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="名言內容..."
+            android:textSize="18sp"
             android:textColor="?android:attr/textColorPrimary"
-            android:layout_marginTop="16dp"/>
+            android:layout_marginTop="12dp"
+            android:lineSpacingExtra="4dp"
+            app:layout_constraintTop_toBottomOf="@id/text_category_label"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent" />
 
+        <!-- 作者 -->
         <TextView
+            android:id="@+id/text_author"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="點擊名言旁的愛心圖示，\n即可將其收藏於此。"
-            android:gravity="center"
+            android:text="— 作者"
             android:textSize="14sp"
             android:textColor="?android:attr/textColorSecondary"
-            android:layout_marginTop="8dp"/>
+            android:layout_marginTop="8dp"
+            app:layout_constraintTop_toBottomOf="@id/text_quote"
+            app:layout_constraintEnd_toEndOf="parent" />
 
-    </LinearLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+</com.google.android.material.card.MaterialCardView>
