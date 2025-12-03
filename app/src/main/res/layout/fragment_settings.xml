@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:background="#F5F5F5"
+    android:background="?android:attr/colorBackground"
     android:fitsSystemWindows="true">
 
     <!-- 標題列 -->
@@ -12,8 +12,9 @@
         android:id="@+id/toolbar_settings"
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
-        android:background="#F5F5F5"
+        android:background="?android:attr/colorBackground"
         app:title="設定"
+        app:titleTextColor="?android:attr/textColorPrimary"
         app:titleCentered="true"
         app:navigationIcon="@drawable/abc_ic_ab_back_material" />
 
@@ -32,137 +33,148 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="外觀"
-                android:textColor="#666666"
+                android:textColor="?android:attr/textColorSecondary"
                 android:textStyle="bold"
                 android:textSize="14sp"
                 android:layout_marginBottom="8dp"
                 android:layout_marginStart="4dp"/>
 
-            <!-- 外觀設定卡片 -->
-            <LinearLayout
+            <!-- 外觀設定卡片 (改用 MaterialCardView 支援深色模式背景) -->
+            <com.google.android.material.card.MaterialCardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:background="@drawable/bg_card_white"
-                android:padding="4dp">
+                app:cardCornerRadius="12dp"
+                app:strokeWidth="0dp"
+                app:cardElevation="0dp"
+                app:cardBackgroundColor="?attr/colorSurfaceVariant">
 
-                <!-- 顏色外觀 -->
-                <LinearLayout
-                    android:id="@+id/layout_theme"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:gravity="center_vertical"
-                    android:background="?attr/selectableItemBackground"
-                    android:padding="16dp">
-
-                    <ImageView
-                        android:layout_width="32dp"
-                        android:layout_height="32dp"
-                        android:src="@drawable/ic_theme_mode"
-                        app:tint="#5C8AE6"/>
-
-                    <TextView
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:text="顏色外觀"
-                        android:textSize="16sp"
-                        android:textColor="#000000"
-                        android:layout_marginStart="16dp"/>
-
-                    <TextView
-                        android:id="@+id/text_theme_value"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="系統預設"
-                        android:textColor="#666666"
-                        android:textSize="14sp"/>
-
-                    <ImageView
-                        android:layout_width="24dp"
-                        android:layout_height="24dp"
-                        android:src="@drawable/abc_ic_ab_back_material"
-                        android:rotation="180"
-                        app:tint="#999999"/>
-                </LinearLayout>
-
-                <View
-                    android:layout_width="match_parent"
-                    android:layout_height="1dp"
-                    android:background="#E0E0E0"
-                    android:layout_marginHorizontal="16dp"/>
-
-                <!-- 字體大小 -->
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
-                    android:padding="16dp">
+                    android:padding="4dp">
 
+                    <!-- 顏色外觀 -->
                     <LinearLayout
+                        android:id="@+id/layout_theme"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:gravity="center_vertical">
+                        android:orientation="horizontal"
+                        android:gravity="center_vertical"
+                        android:background="?attr/selectableItemBackground"
+                        android:padding="16dp">
+
                         <ImageView
                             android:layout_width="32dp"
                             android:layout_height="32dp"
-                            android:src="@drawable/ic_text_size"
+                            android:src="@drawable/ic_theme_mode"
                             app:tint="#5C8AE6"/>
+
                         <TextView
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
-                            android:text="字體大小"
+                            android:text="顏色外觀"
                             android:textSize="16sp"
-                            android:textColor="#000000"
+                            android:textColor="?android:attr/textColorPrimary"
                             android:layout_marginStart="16dp"/>
+
                         <TextView
+                            android:id="@+id/text_theme_value"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="中"
-                            android:textColor="#666666"/>
+                            android:text="系統預設"
+                            android:textColor="?android:attr/textColorSecondary"
+                            android:textSize="14sp"/>
+
+                        <ImageView
+                            android:layout_width="24dp"
+                            android:layout_height="24dp"
+                            android:src="@drawable/abc_ic_ab_back_material"
+                            android:rotation="180"
+                            app:tint="?android:attr/textColorSecondary"/>
                     </LinearLayout>
 
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:background="?android:attr/listDivider"
+                        android:layout_marginHorizontal="16dp"/>
+
+                    <!-- 字體大小 -->
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:gravity="center_vertical"
-                        android:layout_marginTop="12dp">
+                        android:orientation="vertical"
+                        android:padding="16dp">
 
-                        <TextView
-                            android:layout_width="wrap_content"
+                        <LinearLayout
+                            android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:text="T"
-                            android:textSize="14sp"
-                            android:textStyle="bold"/>
+                            android:gravity="center_vertical">
+                            <ImageView
+                                android:layout_width="32dp"
+                                android:layout_height="32dp"
+                                android:src="@drawable/ic_text_size"
+                                app:tint="#5C8AE6"/>
+                            <TextView
+                                android:id="@+id/text_font_size_label"
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:text="字體大小 (預覽)"
+                                android:textSize="16sp"
+                                android:textColor="?android:attr/textColorPrimary"
+                                android:layout_marginStart="16dp"/>
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="調整名言文字"
+                                android:textColor="?android:attr/textColorSecondary"/>
+                        </LinearLayout>
 
-                        <com.google.android.material.slider.Slider
-                            android:id="@+id/slider_font_size"
-                            android:layout_width="0dp"
+                        <LinearLayout
+                            android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            android:valueFrom="12"
-                            android:valueTo="24"
-                            android:stepSize="2"
-                            android:value="16"/>
+                            android:gravity="center_vertical"
+                            android:layout_marginTop="12dp">
 
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="T"
-                            android:textSize="20sp"
-                            android:textStyle="bold"/>
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="A"
+                                android:textSize="14sp"
+                                android:textColor="?android:attr/textColorPrimary"
+                                android:textStyle="bold"/>
+
+                            <com.google.android.material.slider.Slider
+                                android:id="@+id/slider_font_size"
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:valueFrom="14"
+                                android:valueTo="40"
+                                android:stepSize="1"
+                                android:value="18"/>
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="A"
+                                android:textSize="24sp"
+                                android:textColor="?android:attr/textColorPrimary"
+                                android:textStyle="bold"/>
+                        </LinearLayout>
                     </LinearLayout>
                 </LinearLayout>
-            </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
 
             <!-- 通知區塊標題 -->
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="通知"
-                android:textColor="#666666"
+                android:textColor="?android:attr/textColorSecondary"
                 android:textStyle="bold"
                 android:textSize="14sp"
                 android:layout_marginTop="24dp"
@@ -170,90 +182,98 @@
                 android:layout_marginStart="4dp"/>
 
             <!-- 通知設定卡片 -->
-            <LinearLayout
+            <com.google.android.material.card.MaterialCardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:background="@drawable/bg_card_white"
-                android:padding="4dp">
+                app:cardCornerRadius="12dp"
+                app:strokeWidth="0dp"
+                app:cardElevation="0dp"
+                app:cardBackgroundColor="?attr/colorSurfaceVariant">
 
-                <!-- 每日名言通知 -->
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:gravity="center_vertical"
-                    android:padding="16dp">
+                    android:orientation="vertical"
+                    android:padding="4dp">
 
-                    <ImageView
-                        android:layout_width="32dp"
-                        android:layout_height="32dp"
-                        android:src="@drawable/ic_notification"
-                        app:tint="#5C8AE6"/>
-
-                    <TextView
-                        android:layout_width="0dp"
+                    <!-- 每日名言通知 -->
+                    <LinearLayout
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:text="每日名言通知"
-                        android:textSize="16sp"
-                        android:textColor="#000000"
-                        android:layout_marginStart="16dp"/>
+                        android:orientation="horizontal"
+                        android:gravity="center_vertical"
+                        android:padding="16dp">
 
-                    <androidx.appcompat.widget.SwitchCompat
-                        android:id="@+id/switch_notification"
-                        android:layout_width="wrap_content"
+                        <ImageView
+                            android:layout_width="32dp"
+                            android:layout_height="32dp"
+                            android:src="@drawable/ic_notification"
+                            app:tint="#5C8AE6"/>
+
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:text="每日名言通知"
+                            android:textSize="16sp"
+                            android:textColor="?android:attr/textColorPrimary"
+                            android:layout_marginStart="16dp"/>
+
+                        <androidx.appcompat.widget.SwitchCompat
+                            android:id="@+id/switch_notification"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:checked="true"/>
+                    </LinearLayout>
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:background="?android:attr/listDivider"
+                        android:layout_marginHorizontal="16dp"/>
+
+                    <!-- 通知時間 -->
+                    <LinearLayout
+                        android:id="@+id/layout_notification_time"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:checked="true"/>
+                        android:orientation="horizontal"
+                        android:gravity="center_vertical"
+                        android:background="?attr/selectableItemBackground"
+                        android:padding="16dp">
+
+                        <ImageView
+                            android:layout_width="32dp"
+                            android:layout_height="32dp"
+                            android:src="@drawable/ic_time"
+                            app:tint="#5C8AE6"/>
+
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:text="通知時間"
+                            android:textSize="16sp"
+                            android:textColor="?android:attr/textColorPrimary"
+                            android:layout_marginStart="16dp"/>
+
+                        <TextView
+                            android:id="@+id/text_time_value"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="上午 9:00"
+                            android:textColor="?android:attr/textColorSecondary"
+                            android:textSize="14sp"/>
+
+                        <ImageView
+                            android:layout_width="24dp"
+                            android:layout_height="24dp"
+                            android:src="@drawable/abc_ic_ab_back_material"
+                            android:rotation="180"
+                            app:tint="?android:attr/textColorSecondary"/>
+                    </LinearLayout>
                 </LinearLayout>
-
-                <View
-                    android:layout_width="match_parent"
-                    android:layout_height="1dp"
-                    android:background="#E0E0E0"
-                    android:layout_marginHorizontal="16dp"/>
-
-                <!-- 通知時間 -->
-                <LinearLayout
-                    android:id="@+id/layout_notification_time"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:gravity="center_vertical"
-                    android:background="?attr/selectableItemBackground"
-                    android:padding="16dp">
-
-                    <ImageView
-                        android:layout_width="32dp"
-                        android:layout_height="32dp"
-                        android:src="@drawable/ic_time"
-                        app:tint="#5C8AE6"/>
-
-                    <TextView
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:text="通知時間"
-                        android:textSize="16sp"
-                        android:textColor="#000000"
-                        android:layout_marginStart="16dp"/>
-
-                    <TextView
-                        android:id="@+id/text_time_value"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="上午 9:00"
-                        android:textColor="#666666"
-                        android:textSize="14sp"/>
-
-                    <ImageView
-                        android:layout_width="24dp"
-                        android:layout_height="24dp"
-                        android:src="@drawable/abc_ic_ab_back_material"
-                        android:rotation="180"
-                        app:tint="#999999"/>
-                </LinearLayout>
-            </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
 
         </LinearLayout>
     </ScrollView>

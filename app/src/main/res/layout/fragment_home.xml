@@ -3,25 +3,28 @@
     android:orientation="vertical"
     android:gravity="center"
     android:padding="24dp"
+    android:background="?android:attr/colorBackground"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <!-- 名言文字 -->
+    <!-- 名言文字 (主要文字顏色) -->
     <TextView
         android:id="@+id/text_quote"
         android:text="The only way to do great work is to love what you do."
         android:textSize="26sp"
         android:textStyle="bold"
+        android:textColor="?android:attr/textColorPrimary"
         android:textAlignment="center"
         android:layout_marginBottom="12dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
 
-    <!-- 作者 -->
+    <!-- 作者 (次要文字顏色) -->
     <TextView
         android:id="@+id/text_author"
         android:text="— Steve Jobs"
         android:textSize="18sp"
+        android:textColor="?android:attr/textColorSecondary"
         android:textAlignment="center"
         android:layout_marginBottom="40dp"
         android:layout_width="match_parent"

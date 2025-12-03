@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#F5F5F5"
+    android:background="?android:attr/colorBackground"
     android:fitsSystemWindows="true">
 
     <!-- 標題列 -->
@@ -11,8 +11,9 @@
         android:id="@+id/toolbar_favorite"
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
-        android:background="#F5F5F5"
+        android:background="?android:attr/colorBackground"
         app:title="我的最愛"
+        app:titleTextColor="?android:attr/textColorPrimary"
         app:titleCentered="true"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -59,7 +60,7 @@
             android:text="收藏夾是空的"
             android:textSize="20sp"
             android:textStyle="bold"
-            android:textColor="#000000"
+            android:textColor="?android:attr/textColorPrimary"
             android:layout_marginTop="16dp"/>
 
         <TextView
@@ -68,7 +69,7 @@
             android:text="點擊名言旁的愛心圖示，\n即可將其收藏於此。"
             android:gravity="center"
             android:textSize="14sp"
-            android:textColor="#888888"
+            android:textColor="?android:attr/textColorSecondary"
             android:layout_marginTop="8dp"/>
 
     </LinearLayout>

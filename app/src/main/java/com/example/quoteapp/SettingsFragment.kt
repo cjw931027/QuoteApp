@@ -32,6 +32,10 @@ class SettingsFragment : Fragment(R.layout.fragment_settings) {
         // 1. 顏色外觀 (深色模式切換)
         layoutTheme.setOnClickListener {
             DataManager.isDarkMode = !DataManager.isDarkMode // 切換狀態
+
+            // 儲存設定
+            DataManager.saveSettings(requireContext())
+
             updateThemeText(textThemeValue)
             applyTheme()
         }
@@ -39,7 +43,8 @@ class SettingsFragment : Fragment(R.layout.fragment_settings) {
         // 2. 字體大小 Slider
         sliderFontSize.addOnChangeListener { _, value, _ ->
             DataManager.fontSize = value
-            // 數值存入 DataManager，回到首頁時會讀取並變更字體
+            // 儲存設定
+            DataManager.saveSettings(requireContext())
         }
 
         // 3. 通知開關

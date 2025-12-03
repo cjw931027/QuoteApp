@@ -4,6 +4,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="?android:attr/colorBackground"
     android:fitsSystemWindows="true">
 
     <!-- 上方標題列 -->
@@ -11,9 +12,9 @@
         android:id="@+id/toolbar_category"
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
-        android:background="?attr/colorSurface"
+        android:background="?android:attr/colorBackground"
         android:title="分類"
-        android:titleTextColor="@android:color/black"
+        android:titleTextColor="?android:attr/textColorPrimary"
         app:menu="@menu/menu_category"
         app:layout_constraintTop_toTopOf="parent"/>
 

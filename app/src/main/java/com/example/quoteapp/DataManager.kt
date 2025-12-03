@@ -1,5 +1,7 @@
 package com.example.quoteapp
 
+import android.content.Context
+
 object DataManager {
 
     // --- 所有分類 ---
@@ -28,8 +30,33 @@ object DataManager {
     // --- 收藏 ---
     val favorites = mutableListOf<Quote>()
 
-    // --- 修改：新增分類功能 ---
-    // 增加 imageUri 參數，預設為 null
+    // --- 設定變數 ---
+    var fontSize: Float = 18f // 預設字體大小
+    var isDarkMode: Boolean = false // 預設淺色模式
+
+    // --- SharedPreferences 儲存與讀取 ---
+    private const val PREFS_NAME = "QuoteAppPrefs"
+    private const val KEY_FONT_SIZE = "key_font_size"
+    private const val KEY_DARK_MODE = "key_dark_mode"
+
+    // 初始化設定 (在 MainActivity 呼叫)
+    fun loadSettings(context: Context) {
+        val prefs = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
+        fontSize = prefs.getFloat(KEY_FONT_SIZE, 18f)
+        isDarkMode = prefs.getBoolean(KEY_DARK_MODE, false)
+    }
+
+    // 儲存設定 (在 SettingsFragment 呼叫)
+    fun saveSettings(context: Context) {
+        val prefs = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
+        prefs.edit().apply {
+            putFloat(KEY_FONT_SIZE, fontSize)
+            putBoolean(KEY_DARK_MODE, isDarkMode)
+            apply()
+        }
+    }
+
+    // --- 新增分類功能 ---
     fun addCategory(name: String, iconRes: Int, imageUri: String? = null) {
         if (categories.none { it.name == name }) {
             categories.add(Category(name, iconRes, imageUri))
@@ -49,7 +76,4 @@ object DataManager {
             favorites.add(quote)
         }
     }
-
-    var fontSize: Float = 18f // 預設字體大小
-    var isDarkMode: Boolean = false // 預設淺色模式
 }

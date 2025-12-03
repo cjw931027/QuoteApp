@@ -1,111 +1,32 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:background="#F5F5F5"
+    android:background="?android:attr/colorBackground"
     android:fitsSystemWindows="true">
 
-    <!-- 標題列 -->
+    <!-- 上方標題列 -->
     <com.google.android.material.appbar.MaterialToolbar
-        android:id="@+id/toolbar_add_quote"
+        android:id="@+id/toolbar_category"
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
-        android:background="#F5F5F5"
-        app:title="新增名言"
-        app:titleCentered="true"
-        app:navigationIcon="@drawable/abc_ic_ab_back_material" />
+        android:background="?android:attr/colorBackground"
+        android:title="分類"
+        android:titleTextColor="?android:attr/textColorPrimary"
+        app:menu="@menu/menu_category"
+        app:layout_constraintTop_toTopOf="parent"/>
 
-    <!-- 內容捲動區 (權重設為 1，佔滿剩餘空間) -->
-    <ScrollView
-        android:layout_width="match_parent"
+    <!-- 分類 RecyclerView -->
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recycler_category"
+        android:layout_width="0dp"
         android:layout_height="0dp"
-        android:layout_weight="1"
-        android:fillViewport="true">
+        android:padding="16dp"
+        app:layout_constraintTop_toBottomOf="@id/toolbar_category"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"/>
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:padding="24dp">
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="名言內容"
-                android:textSize="16sp"
-                android:textStyle="bold"
-                android:textColor="#333333"
-                android:layout_marginBottom="8dp"/>
-
-            <EditText
-                android:id="@+id/edit_quote_text"
-                android:layout_width="match_parent"
-                android:layout_height="120dp"
-                android:background="@drawable/bg_input_area"
-                android:gravity="top|start"
-                android:hint="“三人行，必有我師焉”"
-                android:padding="16dp"
-                android:textSize="16sp" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="作者"
-                android:textSize="16sp"
-                android:textStyle="bold"
-                android:textColor="#333333"
-                android:layout_marginTop="24dp"
-                android:layout_marginBottom="8dp"/>
-
-            <EditText
-                android:id="@+id/edit_quote_author"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:background="@drawable/bg_input_area"
-                android:hint="例如：孔子"
-                android:padding="16dp"
-                android:textSize="16sp"
-                android:inputType="textPersonName"/>
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="選擇分類"
-                android:textSize="16sp"
-                android:textStyle="bold"
-                android:textColor="#333333"
-                android:layout_marginTop="24dp"
-                android:layout_marginBottom="8dp"/>
-
-            <Spinner
-                android:id="@+id/spinner_category"
-                android:layout_width="match_parent"
-                android:layout_height="50dp"
-                android:background="@drawable/bg_input_area"
-                android:paddingStart="8dp" />
-
-        </LinearLayout>
-    </ScrollView>
-
-    <!-- 底部按鈕區 -->
-    <FrameLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:padding="24dp"
-        android:background="#F5F5F5">
-
-        <Button
-            android:id="@+id/btn_save_quote"
-            android:layout_width="match_parent"
-            android:layout_height="60dp"
-            android:text="新增"
-            android:textSize="18sp"
-            android:textStyle="bold"
-            android:backgroundTint="#C4D1E8"
-            android:textColor="#4A6594"
-            app:cornerRadius="12dp" />
-    </FrameLayout>
-
-</LinearLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>
