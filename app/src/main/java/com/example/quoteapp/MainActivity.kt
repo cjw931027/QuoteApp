@@ -1,5 +1,6 @@
 package com.example.quoteapp
 
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
@@ -69,5 +70,11 @@ class MainActivity : AppCompatActivity() {
         if (savedInstanceState == null) {
             bottomNav.selectedItemId = R.id.homeFragment
         }
+    }
+
+    // [修正] 移除 ?，參數必須是 Intent (不可為空)
+    override fun onNewIntent(intent: Intent) {
+        super.onNewIntent(intent)
+        setIntent(intent) // 更新當前的 Intent，確保 Fragment 拿到最新的資料
     }
 }

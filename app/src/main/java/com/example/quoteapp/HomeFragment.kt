@@ -2,6 +2,7 @@ package com.example.quoteapp
 
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import android.widget.Button
 import android.widget.TextView
@@ -21,7 +22,8 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
         val btnRefresh = view.findViewById<Button>(R.id.btn_refresh)
         val btnShare = view.findViewById<View>(R.id.btn_share)
 
-        fun updateQuote() {
+        // 內部函式：隨機更新名言
+        fun updateRandomQuote() {
             val allQuotes = DataManager.quotes
             if (allQuotes.isEmpty()) return
 
@@ -43,7 +45,7 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
             lastQuote = newQuote
         }
 
-        btnRefresh.setOnClickListener { updateQuote() }
+        btnRefresh.setOnClickListener { updateRandomQuote() }
 
         btnShare.setOnClickListener {
             val quoteContent = textQuote.text.toString()
@@ -59,25 +61,33 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
             startActivity(shareIntent)
         }
 
-        // [新增] 檢查是否是從通知點進來的
+        // [關鍵邏輯修正] 檢查 Intent 資料
         val intent = requireActivity().intent
         val notifText = intent.getStringExtra("notification_quote_text")
         val notifAuthor = intent.getStringExtra("notification_quote_author")
 
+        Log.d("HomeFragment", "Checking Intent: text=$notifText, author=$notifAuthor")
+
         if (!notifText.isNullOrEmpty() && !notifAuthor.isNullOrEmpty()) {
-            // 如果有通知傳來的資料，直接顯示該則名言
+            // [情況 A] 從通知進入：顯示指定名言
+            Log.d("HomeFragment", "Displaying notification quote")
             textQuote.text = notifText
             textAuthor.text = "— $notifAuthor"
 
-            // 建立一個臨時的 Quote 物件給 lastQuote (避免切換時重複)
-            lastQuote = Quote(text = notifText, author = notifAuthor, category = "")
+            // 設定 lastQuote，避免按重抽時剛好又抽到這句會沒反應 (雖然機率低)
+            lastQuote = Quote(text = notifText, author = notifAuthor, category = "Notification")
 
-            // 移除資料，避免旋轉螢幕或下次進入時重複觸發
+            // [重要] 移除 Extra，避免旋轉螢幕或下次打開 App 時又重複顯示通知內容
+            // 注意：因為我們在 NotificationReceiver 用了 CLEAR_TASK，這裡移除主要防止螢幕旋轉
             intent.removeExtra("notification_quote_text")
             intent.removeExtra("notification_quote_author")
         } else {
-            // 沒有通知資料，維持原本的隨機邏輯
-            updateQuote()
+            // [情況 B] 一般進入：如果畫面是第一次建立 (savedInstanceState == null)，才執行隨機更新
+            // 這樣可以避免旋轉螢幕時重新隨機
+            if (savedInstanceState == null) {
+                Log.d("HomeFragment", "Displaying random quote")
+                updateRandomQuote()
+            }
         }
     }
 

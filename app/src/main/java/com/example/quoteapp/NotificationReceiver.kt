@@ -15,20 +15,16 @@ class NotificationReceiver : BroadcastReceiver() {
     override fun onReceive(context: Context, intent: Intent) {
         Log.d("NotificationReceiver", "onReceive triggered. Action: ${intent.action}")
 
-        // 1. 初始化資料
         DataManager.init(context)
 
-        // 2. 處理重開機事件
         if (intent.action == Intent.ACTION_BOOT_COMPLETED) {
             Log.d("NotificationReceiver", "Boot completed, rescheduling...")
             NotificationScheduler.scheduleDailyNotification(context)
             return
         }
 
-        // 3. 顯示通知
         showNotification(context)
 
-        // 4. 排程下一次
         Log.d("NotificationReceiver", "Notification shown, scheduling next one...")
         NotificationScheduler.scheduleDailyNotification(context)
     }
@@ -37,7 +33,6 @@ class NotificationReceiver : BroadcastReceiver() {
         val quotes = DataManager.quotes
         if (quotes.isEmpty()) return
 
-        // 隨機抽選一則
         val randomQuote = quotes.random()
         val quoteText = randomQuote.text
         val author = randomQuote.author
@@ -58,17 +53,25 @@ class NotificationReceiver : BroadcastReceiver() {
             notificationManager.createNotificationChannel(channel)
         }
 
-        // [關鍵修改] 建立 Intent 時，把名言內容一起放入 extras
+        // [修改] 建立 Explicit Intent 指向 MainActivity
         val intent = Intent(context, MainActivity::class.java).apply {
-            // 使用 CLEAR_TASK 確保點擊通知是重新開啟 App，避免舊狀態干擾
+            // [關鍵] 加入這兩個 Flags：
+            // NEW_TASK: 啟動新的 Task
+            // CLEAR_TASK: 清除該 Task 上所有現存 Activity，確保 MainActivity 是重新建立的
+            // 這樣 HomeFragment 就一定會重新執行 onViewCreated
             flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+
+            // 放入資料
             putExtra("notification_quote_text", quoteText)
             putExtra("notification_quote_author", author)
         }
 
+        // 使用唯一 ID 建立 PendingIntent
+        val uniqueRequestCode = System.currentTimeMillis().toInt()
+
         val pendingIntent = PendingIntent.getActivity(
             context,
-            0,
+            uniqueRequestCode,
             intent,
             PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT
         )
