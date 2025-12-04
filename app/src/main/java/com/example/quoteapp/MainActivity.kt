@@ -11,10 +11,10 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        // 1. 讀取設定
-        DataManager.loadSettings(this)
+        // 1. 初始化 DataManager (包含載入設定和啟動資料庫)
+        DataManager.init(this)
 
-        // 2. 應用深色模式主題 (必須在 setContentView 之前設定)
+        // 2. 應用深色模式主題
         if (DataManager.isDarkMode) {
             AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
         } else {
@@ -29,7 +29,6 @@ class MainActivity : AppCompatActivity() {
 
         val bottomNav = findViewById<BottomNavigationView>(R.id.bottom_nav)
 
-        // 監聽頁面切換，如果在「新增」頁面，就隱藏底部導覽列
         navController.addOnDestinationChangedListener { _, destination, _ ->
             when (destination.id) {
                 R.id.addQuoteFragment, R.id.addCategoryFragment -> {
@@ -67,7 +66,6 @@ class MainActivity : AppCompatActivity() {
             }
         }
 
-        // 避免旋轉螢幕或深色模式切換重啟 Activity 時，重設選取項目
         if (savedInstanceState == null) {
             bottomNav.selectedItemId = R.id.homeFragment
         }
