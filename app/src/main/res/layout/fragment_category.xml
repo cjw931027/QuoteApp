@@ -19,11 +19,19 @@
         app:layout_constraintTop_toTopOf="parent"/>
 
     <!-- 分類 RecyclerView -->
+    <!-- 修改重點：
+         1. paddingBottom="100dp"：預留足夠空間給底部導覽列
+         2. clipToPadding="false"：讓內容在捲動時可以使用 Padding 的區域 (不會有一塊空白卡在那)
+         3. 改用 paddingStart/End/Top 來個別設定其他邊距 -->
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recycler_category"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:padding="16dp"
+        android:paddingStart="16dp"
+        android:paddingTop="16dp"
+        android:paddingEnd="16dp"
+        android:paddingBottom="100dp"
+        android:clipToPadding="false"
         app:layout_constraintTop_toBottomOf="@id/toolbar_category"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
