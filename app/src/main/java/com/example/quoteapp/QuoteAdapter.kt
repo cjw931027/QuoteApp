@@ -9,7 +9,9 @@ import androidx.recyclerview.widget.RecyclerView
 
 class QuoteAdapter(
     private val quotes: List<Quote>,
-    private val onFavoriteClick: (() -> Unit)? = null
+    private val onFavoriteClick: (() -> Unit)? = null,
+    // [新增] 長按事件
+    private val onItemLongClick: ((Quote) -> Unit)? = null
 ) : RecyclerView.Adapter<QuoteAdapter.ViewHolder>() {
 
     class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
@@ -35,18 +37,18 @@ class QuoteAdapter(
         holder.textAuthor.text = quote.author
         holder.textQuote.textSize = DataManager.fontSize
 
-        // 直接讀取 quote 物件的屬性
         updateFavoriteIcon(holder.btnFavorite, quote.isFavorite)
 
         holder.btnFavorite.setOnClickListener {
-            // 切換收藏狀態 (DataManager 會負責更新資料庫)
             DataManager.toggleFavorite(quote)
-
-            // 更新 UI
             updateFavoriteIcon(holder.btnFavorite,  quote.isFavorite)
-
-            // 通知外部 (例如收藏頁面需要刷新)
             onFavoriteClick?.invoke()
+        }
+
+        // [新增] 長按刪除
+        holder.itemView.setOnLongClickListener {
+            onItemLongClick?.invoke(quote)
+            true
         }
     }
 

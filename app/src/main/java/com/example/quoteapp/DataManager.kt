@@ -15,7 +15,7 @@ object DataManager {
         // 2. 初始化資料庫
         database = QuoteDatabase.getDatabase(context)
 
-        // 3. 如果資料庫是空的，寫入預設資料
+        // 3. 如果資料庫是空的 (沒有名言)，寫入預設名言
         if (database.quoteDao().getCount() == 0) {
             val defaultQuotes = listOf(
                 Quote(text = "The only way to do great work is to love what you do.", author = "Steve Jobs", category = "勵志"),
@@ -28,22 +28,28 @@ object DataManager {
                 Quote(text = "Pleasure in the job puts perfection in the work.", author = "Aristotle", category = "工作"),
                 Quote(text = "A real friend is one who walks in when the rest of the world walks out.", author = "Walter Winchell", category = "友誼")
             )
-            // 逐筆寫入
             defaultQuotes.forEach { database.quoteDao().insertQuote(it) }
+        }
+
+        // 4. 如果資料庫是空的 (沒有分類)，寫入預設分類
+        if (database.categoryDao().getCount() == 0) {
+            val defaultCategories = listOf(
+                Category(name = "勵志", imageRes = R.drawable.cat_motivation),
+                Category(name = "人生", imageRes = R.drawable.cat_life),
+                Category(name = "愛情", imageRes = R.drawable.cat_love),
+                Category(name = "工作", imageRes = R.drawable.cat_work),
+                Category(name = "友誼", imageRes = R.drawable.cat_friendship),
+                Category(name = "其他", imageRes = R.drawable.cat_others)
+            )
+            defaultCategories.forEach { database.categoryDao().insertCategory(it) }
         }
     }
 
-    // --- 所有分類 (這部分保持不變，因為分類通常是固定的) ---
-    val categories = mutableListOf(
-        Category("勵志", R.drawable.cat_motivation),
-        Category("人生", R.drawable.cat_life),
-        Category("愛情", R.drawable.cat_love),
-        Category("工作", R.drawable.cat_work),
-        Category("友誼", R.drawable.cat_friendship),
-        Category("其他", R.drawable.cat_others),
-    )
-
     // --- 從資料庫動態取得資料 ---
+
+    // 取得所有分類
+    val categories: List<Category>
+        get() = database.categoryDao().getAllCategories()
 
     // 取得所有名言
     val quotes: List<Quote>
@@ -77,10 +83,24 @@ object DataManager {
 
     // --- 功能操作 ---
 
+    // 新增分類到資料庫
     fun addCategory(name: String, iconRes: Int, imageUri: String? = null) {
-        if (categories.none { it.name == name }) {
-            categories.add(Category(name, iconRes, imageUri))
+        if (database.categoryDao().getCountByName(name) == 0) {
+            val newCategory = Category(name = name, imageRes = iconRes, imageUri = imageUri)
+            database.categoryDao().insertCategory(newCategory)
         }
+    }
+
+    // [新增] 刪除分類 (以及該分類下的所有名言)
+    fun deleteCategory(category: Category) {
+        // 1. 先刪除該分類下的所有名言 (因為名言是用 category 字串做關聯)
+        val quotesToDelete = database.quoteDao().getQuotesByCategory(category.name)
+        quotesToDelete.forEach {
+            database.quoteDao().deleteQuote(it)
+        }
+
+        // 2. 再刪除分類本身
+        database.categoryDao().deleteCategory(category)
     }
 
     // 新增名言到資料庫
@@ -89,11 +109,14 @@ object DataManager {
         database.quoteDao().insertQuote(newQuote)
     }
 
+    // [新增] 刪除名言
+    fun deleteQuote(quote: Quote) {
+        database.quoteDao().deleteQuote(quote)
+    }
+
     // 切換收藏狀態 (更新資料庫)
     fun toggleFavorite(quote: Quote) {
-        // 反轉狀態
         quote.isFavorite = !quote.isFavorite
-        // 更新資料庫
         database.quoteDao().updateQuote(quote)
     }
 }

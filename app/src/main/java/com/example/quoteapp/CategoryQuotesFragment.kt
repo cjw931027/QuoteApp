@@ -2,13 +2,15 @@ package com.example.quoteapp
 
 import android.os.Bundle
 import android.view.View
+import android.widget.Toast
+import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.appbar.MaterialToolbar
 import androidx.navigation.fragment.findNavController
 
-class   CategoryQuotesFragment : Fragment(R.layout.fragment_category_quotes) {
+class CategoryQuotesFragment : Fragment(R.layout.fragment_category_quotes) {
 
     private lateinit var recycler: RecyclerView
     private lateinit var adapter: QuoteAdapter
@@ -17,15 +19,13 @@ class   CategoryQuotesFragment : Fragment(R.layout.fragment_category_quotes) {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        val toolbar = view.findViewById<MaterialToolbar>(R.id.toolbar_category) // 原本是 toolbar_quotes
-        recycler = view.findViewById(R.id.recycler_category) // 原本是 recycler_quotes
+        val toolbar = view.findViewById<MaterialToolbar>(R.id.toolbar_category)
+        recycler = view.findViewById(R.id.recycler_category)
 
         title = arguments?.getString("category_title") ?: "分類內容"
 
-        // 設定 Toolbar 顯示分類名稱
         toolbar.title = title
 
-        // 左上返回按鈕
         toolbar.setNavigationIcon(androidx.appcompat.R.drawable.abc_ic_ab_back_material)
         toolbar.setNavigationOnClickListener {
             findNavController().navigateUp()
@@ -34,20 +34,37 @@ class   CategoryQuotesFragment : Fragment(R.layout.fragment_category_quotes) {
         setupRecyclerView()
     }
 
-    // 當回到此頁面時 (例如從設定頁回來)，重新整理列表以套用新的字體大小
     override fun onResume() {
         super.onResume()
-        if (::adapter.isInitialized) {
-            adapter.notifyDataSetChanged()
-        }
+        setupRecyclerView()
     }
 
     private fun setupRecyclerView() {
-        // 篩選該分類名言
         val filteredQuotes = DataManager.quotes.filter { it.category == title }
 
-        adapter = QuoteAdapter(filteredQuotes)
+        adapter = QuoteAdapter(
+            filteredQuotes,
+            onFavoriteClick = { /* 這裡不需要做特別的事，點愛心會自己變色 */ },
+            // [新增] 長按刪除名言
+            onItemLongClick = { quote ->
+                showDeleteConfirmDialog(quote)
+            }
+        )
         recycler.layoutManager = LinearLayoutManager(requireContext())
         recycler.adapter = adapter
+    }
+
+    // [新增] 刪除確認
+    private fun showDeleteConfirmDialog(quote: Quote) {
+        AlertDialog.Builder(requireContext())
+            .setTitle("刪除名言")
+            .setMessage("確定要刪除這則名言嗎？")
+            .setPositiveButton("刪除") { _, _ ->
+                DataManager.deleteQuote(quote)
+                Toast.makeText(requireContext(), "已刪除名言", Toast.LENGTH_SHORT).show()
+                setupRecyclerView() // 刷新列表
+            }
+            .setNegativeButton("取消", null)
+            .show()
     }
 }

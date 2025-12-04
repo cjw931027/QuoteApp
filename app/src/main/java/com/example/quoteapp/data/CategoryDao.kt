@@ -1,6 +1,7 @@
 package com.example.quoteapp.data
 
 import androidx.room.Dao
+import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.Query
 import com.example.quoteapp.Category
@@ -14,6 +15,10 @@ interface CategoryDao {
     // 新增分類
     @Insert
     fun insertCategory(category: Category)
+
+    // [新增] 刪除分類
+    @Delete
+    fun deleteCategory(category: Category)
 
     // 檢查是否有同名分類
     @Query("SELECT COUNT(*) FROM categories WHERE name = :name")

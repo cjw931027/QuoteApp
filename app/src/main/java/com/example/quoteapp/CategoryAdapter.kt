@@ -10,7 +10,9 @@ import androidx.recyclerview.widget.RecyclerView
 
 class CategoryAdapter(
     private val categories: List<Category>,
-    private val onItemClick: (Category) -> Unit
+    private val onItemClick: (Category) -> Unit,
+    // [新增] 長按事件的回呼函式
+    private val onItemLongClick: (Category) -> Unit
 ) : RecyclerView.Adapter<CategoryAdapter.ViewHolder>() {
 
     class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
@@ -29,23 +31,25 @@ class CategoryAdapter(
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val item = categories[position]
 
-        // --- 修改顯示邏輯 ---
         if (item.imageUri != null) {
-            // 如果有自訂圖片 URI，就解析並顯示
             holder.img.setImageURI(Uri.parse(item.imageUri))
-            // 為了避免圖片變形，通常建議設為 CenterCrop
             holder.img.scaleType = ImageView.ScaleType.CENTER_CROP
         } else {
-            // 否則顯示內建資源圖示
             holder.img.setImageResource(item.imageRes)
             holder.img.scaleType = ImageView.ScaleType.CENTER_CROP
         }
-        // ------------------
 
         holder.title.text = item.name
 
+        // 點擊：進入分類
         holder.itemView.setOnClickListener {
             onItemClick(item)
+        }
+
+        // [新增] 長按：刪除
+        holder.itemView.setOnLongClickListener {
+            onItemLongClick(item)
+            true // 回傳 true 表示事件已被處理，不會觸發普通點擊
         }
     }
 }

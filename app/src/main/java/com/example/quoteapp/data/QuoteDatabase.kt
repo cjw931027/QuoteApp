@@ -4,11 +4,18 @@ import android.content.Context
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
+import com.example.quoteapp.Category
 import com.example.quoteapp.Quote
 
-@Database(entities = [Quote::class], version = 1, exportSchema = false)
+// 1. 在 entities 中加入 Category::class
+// 2. 將 version 版本號升級為 2 (因為更動了資料結構)
+@Database(entities = [Quote::class, Category::class], version = 2, exportSchema = false)
 abstract class QuoteDatabase : RoomDatabase() {
+
     abstract fun quoteDao(): QuoteDao
+
+    // 新增：提供 CategoryDao 的存取方法
+    abstract fun categoryDao(): CategoryDao
 
     companion object {
         @Volatile
@@ -21,8 +28,10 @@ abstract class QuoteDatabase : RoomDatabase() {
                     QuoteDatabase::class.java,
                     "quote_database"
                 )
-                    // 為了簡化，這裡允許在主執行緒查詢 (正式專案建議使用 Coroutines)
+                    // 為了開發方便，允許在主執行緒查詢
                     .allowMainThreadQueries()
+                    // 新增：如果資料庫版本不符 (例如從 v1 升級到 v2)，直接重建資料庫 (會清除舊資料)
+                    .fallbackToDestructiveMigration()
                     .build()
                 INSTANCE = instance
                 instance
