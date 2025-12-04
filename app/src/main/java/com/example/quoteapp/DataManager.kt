@@ -7,12 +7,10 @@ object DataManager {
 
     private lateinit var database: QuoteDatabase
 
-    // --- 初始化 (必須在 MainActivity 呼叫) ---
     fun init(context: Context) {
         loadSettings(context)
         database = QuoteDatabase.getDatabase(context)
 
-        // 初始化預設名言
         if (database.quoteDao().getCount() == 0) {
             val defaultQuotes = listOf(
                 Quote(text = "The only way to do great work is to love what you do.", author = "Steve Jobs", category = "勵志"),
@@ -28,7 +26,6 @@ object DataManager {
             defaultQuotes.forEach { database.quoteDao().insertQuote(it) }
         }
 
-        // 初始化預設分類
         if (database.categoryDao().getCount() == 0) {
             val defaultCategories = listOf(
                 Category(name = "勵志", imageRes = R.drawable.cat_motivation),
@@ -42,7 +39,6 @@ object DataManager {
         }
     }
 
-    // --- 從資料庫動態取得資料 ---
     val categories: List<Category>
         get() = database.categoryDao().getAllCategories()
 
@@ -52,11 +48,8 @@ object DataManager {
     val favorites: List<Quote>
         get() = database.quoteDao().getFavoriteQuotes()
 
-    // --- 設定變數 ---
     var fontSize: Float = 18f
     var isDarkMode: Boolean = false
-
-    // [新增] 通知設定預設值
     var isNotificationEnabled: Boolean = true
     var notificationHour: Int = 9
     var notificationMinute: Int = 0
@@ -64,16 +57,18 @@ object DataManager {
     private const val PREFS_NAME = "QuoteAppPrefs"
     private const val KEY_FONT_SIZE = "key_font_size"
     private const val KEY_DARK_MODE = "key_dark_mode"
-    // [新增] Preference Keys
     private const val KEY_NOTIF_ENABLED = "key_notif_enabled"
     private const val KEY_NOTIF_HOUR = "key_notif_hour"
     private const val KEY_NOTIF_MINUTE = "key_notif_minute"
+
+    // [新增] 用來儲存通知名言的 Key
+    private const val KEY_NOTIF_QUOTE_TEXT = "key_notif_text"
+    private const val KEY_NOTIF_QUOTE_AUTHOR = "key_notif_author"
 
     fun loadSettings(context: Context) {
         val prefs = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
         fontSize = prefs.getFloat(KEY_FONT_SIZE, 18f)
         isDarkMode = prefs.getBoolean(KEY_DARK_MODE, false)
-        // [新增] 讀取通知設定
         isNotificationEnabled = prefs.getBoolean(KEY_NOTIF_ENABLED, true)
         notificationHour = prefs.getInt(KEY_NOTIF_HOUR, 9)
         notificationMinute = prefs.getInt(KEY_NOTIF_MINUTE, 0)
@@ -84,7 +79,6 @@ object DataManager {
         prefs.edit().apply {
             putFloat(KEY_FONT_SIZE, fontSize)
             putBoolean(KEY_DARK_MODE, isDarkMode)
-            // [新增] 儲存通知設定
             putBoolean(KEY_NOTIF_ENABLED, isNotificationEnabled)
             putInt(KEY_NOTIF_HOUR, notificationHour)
             putInt(KEY_NOTIF_MINUTE, notificationMinute)
@@ -92,7 +86,26 @@ object DataManager {
         }
     }
 
-    // --- 功能操作 ---
+    // [新增] 儲存通知選到的名言
+    fun saveNotificationQuote(context: Context, quote: Quote) {
+        val prefs = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
+        prefs.edit().apply {
+            putString(KEY_NOTIF_QUOTE_TEXT, quote.text)
+            putString(KEY_NOTIF_QUOTE_AUTHOR, quote.author)
+            apply()
+        }
+    }
+
+    // [新增] 讀取通知名言
+    fun getNotificationQuote(context: Context): Quote? {
+        val prefs = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
+        val text = prefs.getString(KEY_NOTIF_QUOTE_TEXT, null)
+        val author = prefs.getString(KEY_NOTIF_QUOTE_AUTHOR, null)
+        return if (text != null && author != null) {
+            Quote(text = text, author = author, category = "Notification")
+        } else null
+    }
+
     fun addCategory(name: String, iconRes: Int, imageUri: String? = null) {
         if (database.categoryDao().getCountByName(name) == 0) {
             val newCategory = Category(name = name, imageRes = iconRes, imageUri = imageUri)

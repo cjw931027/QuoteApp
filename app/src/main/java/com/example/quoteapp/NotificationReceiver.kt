@@ -37,6 +37,10 @@ class NotificationReceiver : BroadcastReceiver() {
         val quoteText = randomQuote.text
         val author = randomQuote.author
 
+        // [關鍵] 將選到的名言存入 DataManager (SharedPreference)
+        // 這樣就不怕 Intent 資料遺失了
+        DataManager.saveNotificationQuote(context, randomQuote)
+
         val channelId = "daily_quote_channel"
         val notificationId = 1001
 
@@ -53,20 +57,12 @@ class NotificationReceiver : BroadcastReceiver() {
             notificationManager.createNotificationChannel(channel)
         }
 
-        // [修改] 建立 Explicit Intent 指向 MainActivity
         val intent = Intent(context, MainActivity::class.java).apply {
-            // [關鍵] 加入這兩個 Flags：
-            // NEW_TASK: 啟動新的 Task
-            // CLEAR_TASK: 清除該 Task 上所有現存 Activity，確保 MainActivity 是重新建立的
-            // 這樣 HomeFragment 就一定會重新執行 onViewCreated
             flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
-
-            // 放入資料
-            putExtra("notification_quote_text", quoteText)
-            putExtra("notification_quote_author", author)
+            // [關鍵] 只放入一個旗標，告訴 App 這是從通知點進來的
+            putExtra("from_notification", true)
         }
 
-        // 使用唯一 ID 建立 PendingIntent
         val uniqueRequestCode = System.currentTimeMillis().toInt()
 
         val pendingIntent = PendingIntent.getActivity(
