@@ -7,35 +7,46 @@ import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.os.Build
+import android.util.Log
 import androidx.core.app.NotificationCompat
 
 class NotificationReceiver : BroadcastReceiver() {
 
     override fun onReceive(context: Context, intent: Intent) {
-        // 確保 DataManager 已初始化
+        Log.d("NotificationReceiver", "onReceive triggered. Action: ${intent.action}")
+
+        // 1. 初始化資料
         DataManager.init(context)
 
-        // 隨機選一則名言
+        // 2. 處理重開機事件
+        if (intent.action == Intent.ACTION_BOOT_COMPLETED) {
+            Log.d("NotificationReceiver", "Boot completed, rescheduling...")
+            NotificationScheduler.scheduleDailyNotification(context)
+            return
+        }
+
+        // 3. 顯示通知
+        showNotification(context)
+
+        // 4. 排程下一次
+        Log.d("NotificationReceiver", "Notification shown, scheduling next one...")
+        NotificationScheduler.scheduleDailyNotification(context)
+    }
+
+    private fun showNotification(context: Context) {
         val quotes = DataManager.quotes
         if (quotes.isEmpty()) return
 
+        // 隨機抽選一則
         val randomQuote = quotes.random()
+        val quoteText = randomQuote.text
+        val author = randomQuote.author
 
-        // 發送通知
-        showNotification(context, randomQuote.text, randomQuote.author)
-
-        // 重新排程下一次通知 (針對某些 Android 版本 AlarmManager 不一定會自動重複)
-        // 這裡為了簡單使用 setRepeating 或是 AlarmManager 重複機制，
-        // 但如果需要精確控制，通常建議在這裡再次呼叫 NotificationScheduler.schedule(...)
-    }
-
-    private fun showNotification(context: Context, quoteText: String, author: String) {
         val channelId = "daily_quote_channel"
         val notificationId = 1001
 
         val notificationManager = context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
 
-        // 建立 Notification Channel (Android 8.0+)
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             val channel = NotificationChannel(
                 channelId,
@@ -47,10 +58,14 @@ class NotificationReceiver : BroadcastReceiver() {
             notificationManager.createNotificationChannel(channel)
         }
 
-        // 點擊通知開啟 App
+        // [關鍵修改] 建立 Intent 時，把名言內容一起放入 extras
         val intent = Intent(context, MainActivity::class.java).apply {
+            // 使用 CLEAR_TASK 確保點擊通知是重新開啟 App，避免舊狀態干擾
             flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+            putExtra("notification_quote_text", quoteText)
+            putExtra("notification_quote_author", author)
         }
+
         val pendingIntent = PendingIntent.getActivity(
             context,
             0,
@@ -58,9 +73,8 @@ class NotificationReceiver : BroadcastReceiver() {
             PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT
         )
 
-        // 建構通知內容
         val builder = NotificationCompat.Builder(context, channelId)
-            .setSmallIcon(R.drawable.ic_notification) // 確保這個資源存在
+            .setSmallIcon(R.drawable.ic_notification)
             .setContentTitle("每日名言")
             .setContentText("$quoteText — $author")
             .setStyle(NotificationCompat.BigTextStyle().bigText("$quoteText\n\n— $author"))

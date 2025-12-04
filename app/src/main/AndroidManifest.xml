@@ -2,11 +2,12 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
 
-    <!-- Android 13+ 需要此權限才能發送通知 -->
+    <!-- [新增] 1. 通知與鬧鐘權限 -->
     <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
-    <!-- 設定鬧鐘權限 -->
     <uses-permission android:name="android.permission.SCHEDULE_EXACT_ALARM" />
     <uses-permission android:name="android.permission.USE_EXACT_ALARM" />
+    <!-- [新增] 2. 接收重開機廣播的權限 (讓通知在手機重啟後繼續運作) -->
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
 
     <application
         android:allowBackup="true"
@@ -29,11 +30,16 @@
             </intent-filter>
         </activity>
 
-        <!-- 註冊通知接收器 -->
+        <!-- [新增] 3. 註冊接收器 -->
         <receiver
             android:name=".NotificationReceiver"
             android:enabled="true"
-            android:exported="false" />
+            android:exported="true"> <!-- exported 設為 true 以接收系統廣播 -->
+            <intent-filter>
+                <!-- 監聽重開機完成的事件 -->
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
+            </intent-filter>
+        </receiver>
 
     </application>
 
