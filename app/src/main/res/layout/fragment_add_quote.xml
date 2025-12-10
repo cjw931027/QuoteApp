@@ -36,6 +36,7 @@
                 android:textColor="?android:attr/textColorSecondary"
                 android:layout_marginBottom="8dp"/>
 
+            <!-- [修改 5] 加入 inputType="textMultiLine|textCapSentences" 解決無法打字的問題 -->
             <EditText
                 android:id="@+id/edit_quote_text"
                 android:layout_width="match_parent"
@@ -45,6 +46,7 @@
                 android:hint="輸入名言..."
                 android:gravity="top"
                 android:minLines="3"
+                android:inputType="textMultiLine|textCapSentences"
                 android:textColor="?android:attr/textColorPrimary"/>
 
             <TextView
@@ -55,6 +57,7 @@
                 android:layout_marginTop="24dp"
                 android:layout_marginBottom="8dp"/>
 
+            <!-- [修改 5] 加入 inputType="textPersonName" 並移除 deprecated 的 singleLine -->
             <EditText
                 android:id="@+id/edit_quote_author"
                 android:layout_width="match_parent"
@@ -62,7 +65,7 @@
                 android:background="@drawable/bg_input_area"
                 android:padding="16dp"
                 android:hint="例如：Steve Jobs (留空為匿名)"
-                android:singleLine="true"
+                android:inputType="textPersonName"
                 android:textColor="?android:attr/textColorPrimary"/>
 
             <TextView

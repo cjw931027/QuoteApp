@@ -8,6 +8,7 @@
     android:fitsSystemWindows="true">
 
     <!-- 標題列 -->
+    <!-- [修改 1] 移除了 app:navigationIcon="..." 這樣左上角就不會出現箭頭 -->
     <com.google.android.material.appbar.MaterialToolbar
         android:id="@+id/toolbar_settings"
         android:layout_width="match_parent"
@@ -15,8 +16,7 @@
         android:background="?android:attr/colorBackground"
         app:title="設定"
         app:titleTextColor="?android:attr/textColorPrimary"
-        app:titleCentered="true"
-        app:navigationIcon="@drawable/abc_ic_ab_back_material" />
+        app:titleCentered="true" />
 
     <ScrollView
         android:layout_width="match_parent"
@@ -39,7 +39,7 @@
                 android:layout_marginBottom="8dp"
                 android:layout_marginStart="4dp"/>
 
-            <!-- 外觀設定卡片 (改用 MaterialCardView 支援深色模式背景) -->
+            <!-- 外觀設定卡片 -->
             <com.google.android.material.card.MaterialCardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"

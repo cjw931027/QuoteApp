@@ -10,7 +10,6 @@ import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import com.google.android.material.appbar.MaterialToolbar
-// 關鍵修正：明確匯入 R
 import com.example.quoteapp.R
 
 class AddQuoteFragment : Fragment(R.layout.fragment_add_quote) {
@@ -24,7 +23,6 @@ class AddQuoteFragment : Fragment(R.layout.fragment_add_quote) {
         val spinnerCategory = view.findViewById<Spinner>(R.id.spinner_category)
         val btnSave = view.findViewById<Button>(R.id.btn_save_quote)
 
-        // 左上返回按鈕 (已在 XML 中設定圖示 ?attr/homeAsUpIndicator，這裡只需設定點擊事件)
         toolbar.setNavigationOnClickListener {
             findNavController().navigateUp()
         }
@@ -33,6 +31,15 @@ class AddQuoteFragment : Fragment(R.layout.fragment_add_quote) {
         val categories = DataManager.categories.map { it.name }
         val adapter = ArrayAdapter(requireContext(), android.R.layout.simple_spinner_dropdown_item, categories)
         spinnerCategory.adapter = adapter
+
+        // [修改 3 延伸] 檢查是否有預設分類參數
+        val preselectedCategory = arguments?.getString("preselected_category")
+        if (preselectedCategory != null) {
+            val index = categories.indexOf(preselectedCategory)
+            if (index >= 0) {
+                spinnerCategory.setSelection(index)
+            }
+        }
 
         btnSave.setOnClickListener {
             val text = editQuote.text.toString().trim()

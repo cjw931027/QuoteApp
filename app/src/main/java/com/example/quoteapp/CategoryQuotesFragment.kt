@@ -31,6 +31,22 @@ class CategoryQuotesFragment : Fragment(R.layout.fragment_category_quotes) {
             findNavController().navigateUp()
         }
 
+        // [修改 3] 設定 Toolbar 選單點擊事件
+        // 這樣在分類內點擊「+」號才有反應
+        toolbar.setOnMenuItemClickListener { item ->
+            when (item.itemId) {
+                R.id.action_add -> {
+                    // 點擊新增，導航至 AddQuoteFragment，並傳遞當前分類名稱
+                    val bundle = Bundle().apply {
+                        putString("preselected_category", title)
+                    }
+                    findNavController().navigate(R.id.addQuoteFragment, bundle)
+                    true
+                }
+                else -> false
+            }
+        }
+
         setupRecyclerView()
     }
 
@@ -45,7 +61,6 @@ class CategoryQuotesFragment : Fragment(R.layout.fragment_category_quotes) {
         adapter = QuoteAdapter(
             filteredQuotes,
             onFavoriteClick = { /* 這裡不需要做特別的事，點愛心會自己變色 */ },
-            // [新增] 長按刪除名言
             onItemLongClick = { quote ->
                 showDeleteConfirmDialog(quote)
             }
@@ -54,7 +69,6 @@ class CategoryQuotesFragment : Fragment(R.layout.fragment_category_quotes) {
         recycler.adapter = adapter
     }
 
-    // [新增] 刪除確認
     private fun showDeleteConfirmDialog(quote: Quote) {
         AlertDialog.Builder(requireContext())
             .setTitle("刪除名言")

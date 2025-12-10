@@ -37,8 +37,7 @@ class NotificationReceiver : BroadcastReceiver() {
         val quoteText = randomQuote.text
         val author = randomQuote.author
 
-        // [關鍵] 將選到的名言存入 DataManager (SharedPreference)
-        // 這樣就不怕 Intent 資料遺失了
+        // 儲存選到的名言
         DataManager.saveNotificationQuote(context, randomQuote)
 
         val channelId = "daily_quote_channel"
@@ -59,7 +58,6 @@ class NotificationReceiver : BroadcastReceiver() {
 
         val intent = Intent(context, MainActivity::class.java).apply {
             flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
-            // [關鍵] 只放入一個旗標，告訴 App 這是從通知點進來的
             putExtra("from_notification", true)
         }
 
@@ -72,11 +70,13 @@ class NotificationReceiver : BroadcastReceiver() {
             PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT
         )
 
+        // [修改 4] 將通知內容改為 "快來查看今日名言!"
+        // 原本的詳細內容依然保留在 BigTextStyle (展開後可見)，或是使用者點擊後進入 App 觀看
         val builder = NotificationCompat.Builder(context, channelId)
             .setSmallIcon(R.drawable.ic_notification)
             .setContentTitle("每日名言")
-            .setContentText("$quoteText — $author")
-            .setStyle(NotificationCompat.BigTextStyle().bigText("$quoteText\n\n— $author"))
+            .setContentText("快來查看今日名言!") // 這裡修改了顯示文字
+            .setStyle(NotificationCompat.BigTextStyle().bigText("$quoteText\n\n— $author")) // 展開後還是可以看到完整內容
             .setPriority(NotificationCompat.PRIORITY_DEFAULT)
             .setContentIntent(pendingIntent)
             .setAutoCancel(true)
