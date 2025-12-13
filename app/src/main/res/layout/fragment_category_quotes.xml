@@ -19,11 +19,16 @@
         app:layout_constraintTop_toTopOf="parent"/>
 
     <!-- 分類 RecyclerView -->
+    <!-- [修改] 增加底部 padding 並設定 clipToPadding=false 以防被遮擋 -->
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recycler_category"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:padding="16dp"
+        android:paddingStart="16dp"
+        android:paddingTop="16dp"
+        android:paddingEnd="16dp"
+        android:paddingBottom="100dp"
+        android:clipToPadding="false"
         app:layout_constraintTop_toBottomOf="@id/toolbar_category"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
