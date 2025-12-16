@@ -2,12 +2,15 @@ package com.example.quoteapp
 
 import android.content.Context
 import com.example.quoteapp.data.QuoteDatabase
+import com.example.quoteapp.data.User
 
 object DataManager {
 
     private lateinit var database: QuoteDatabase
+    private lateinit var appContext: Context
 
     fun init(context: Context) {
+        appContext = context.applicationContext
         loadSettings(context)
         database = QuoteDatabase.getDatabase(context)
 
@@ -101,13 +104,20 @@ object DataManager {
     private const val KEY_NOTIF_QUOTE_TEXT = "key_notif_text"
     private const val KEY_NOTIF_QUOTE_AUTHOR = "key_notif_author"
 
+    private const val KEY_IS_LOGGED_IN = "key_is_logged_in"
+    private const val KEY_USER_ID = "key_user_id"
+
     fun loadSettings(context: Context) {
         val prefs = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
         fontSize = prefs.getFloat(KEY_FONT_SIZE, 18f)
         isDarkMode = prefs.getBoolean(KEY_DARK_MODE, false)
         isNotificationEnabled = prefs.getBoolean(KEY_NOTIF_ENABLED, true)
         notificationHour = prefs.getInt(KEY_NOTIF_HOUR, 9)
+
         notificationMinute = prefs.getInt(KEY_NOTIF_MINUTE, 0)
+        
+        isLoggedIn = prefs.getBoolean(KEY_IS_LOGGED_IN, false)
+        currentUserId = prefs.getInt(KEY_USER_ID, -1)
     }
 
     fun saveSettings(context: Context) {
@@ -167,5 +177,68 @@ object DataManager {
     fun toggleFavorite(quote: Quote) {
         quote.isFavorite = !quote.isFavorite
         database.quoteDao().updateQuote(quote)
+    }
+
+    // --- User Management ---
+    var isLoggedIn: Boolean = false
+        private set
+    var currentUserId: Int = -1
+        private set
+
+    fun login(email: String, password: String): User? {
+        val normalizedEmail = email.lowercase()
+        val user = database.userDao().getUserByEmail(normalizedEmail)
+        if (user != null && user.password == password) {
+            isLoggedIn = true
+            currentUserId = user.id
+            saveUserSession()
+            return user
+        }
+        return null
+    }
+
+    // Google Login Mock
+    fun loginWithGoogle(): Boolean {
+        // Mock successful login
+        isLoggedIn = true
+        currentUserId = -1 // Special ID for guest/google mock if we don't save them to DB, or create a mock user
+        // Let's create a mock user for Google if not exists or just set session
+        saveUserSession()
+        return true
+    }
+
+    fun register(username: String, email: String, password: String): Boolean {
+        val normalizedEmail = email.lowercase()
+        val existing = database.userDao().getUserByEmail(normalizedEmail)
+        if (existing != null) return false // Email taken
+
+        val newUser = User(username = username, email = normalizedEmail, password = password)
+        val id = database.userDao().insertUser(newUser)
+        if (id > 0) {
+            login(normalizedEmail, password) // Auto login after register
+            return true
+        }
+        return false
+    }
+
+    fun logout() {
+        isLoggedIn = false
+        currentUserId = -1
+        saveUserSession()
+    }
+
+    fun getCurrentUser(): User? {
+        if (!isLoggedIn || currentUserId == -1) return null
+        return database.userDao().getUserById(currentUserId)
+    }
+
+    private fun saveUserSession() {
+        if (!::appContext.isInitialized) return
+        val prefs = appContext.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
+        prefs.edit().apply {
+            putBoolean(KEY_IS_LOGGED_IN, isLoggedIn)
+            putInt(KEY_USER_ID, currentUserId)
+            apply()
+        }
     }
 }

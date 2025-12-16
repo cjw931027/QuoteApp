@@ -9,13 +9,16 @@ import com.example.quoteapp.Quote
 
 // 1. 在 entities 中加入 Category::class
 // 2. 將 version 版本號升級為 2 (因為更動了資料結構)
-@Database(entities = [Quote::class, Category::class], version = 2, exportSchema = false)
+@Database(entities = [Quote::class, Category::class, User::class], version = 3, exportSchema = false)
 abstract class QuoteDatabase : RoomDatabase() {
 
     abstract fun quoteDao(): QuoteDao
 
     // 新增：提供 CategoryDao 的存取方法
     abstract fun categoryDao(): CategoryDao
+
+    // 新增：提供 UserDao 的存取方法
+    abstract fun userDao(): UserDao
 
     companion object {
         @Volatile

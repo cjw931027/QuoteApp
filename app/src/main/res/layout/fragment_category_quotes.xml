@@ -15,6 +15,7 @@
         android:background="?android:attr/colorBackground"
         android:title="分類"
         android:titleTextColor="?android:attr/textColorPrimary"
+        app:titleCentered="true"
         app:menu="@menu/menu_category"
         app:layout_constraintTop_toTopOf="parent"/>
 

@@ -15,17 +15,14 @@
         android:layout_height="wrap_content"
         android:padding="16dp">
 
-        <!-- 分類標籤 -->
         <TextView
             android:id="@+id/text_category_label"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="分類"
             android:textSize="12sp"
-            android:textColor="?android:attr/colorPrimary"
-            android:background="@drawable/bg_input_area"
-            android:paddingHorizontal="8dp"
-            android:paddingVertical="4dp"
+            android:textColor="?android:attr/textColorSecondary"
+            android:layout_marginBottom="4dp"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 

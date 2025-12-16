@@ -20,8 +20,7 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
         textQuote = view.findViewById(R.id.text_quote)
         textAuthor = view.findViewById(R.id.text_author)
         val btnRefresh = view.findViewById<Button>(R.id.btn_refresh)
-        val btnShare = view.findViewById<View>(R.id.btn_share)
-
+        
         fun updateRandomQuote() {
             val allQuotes = DataManager.quotes
             if (allQuotes.isEmpty()) return
@@ -46,18 +45,34 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
 
         btnRefresh.setOnClickListener { updateRandomQuote() }
 
-        btnShare.setOnClickListener {
-            val quoteContent = textQuote.text.toString()
-            val quoteAuthor = textAuthor.text.toString()
-            val shareText = "$quoteContent\n$quoteAuthor\n\n- 來自 QuoteApp"
 
-            val sendIntent = Intent().apply {
-                action = Intent.ACTION_SEND
-                putExtra(Intent.EXTRA_TEXT, shareText)
-                type = "text/plain"
+        val toolbar = view.findViewById<com.google.android.material.appbar.MaterialToolbar>(R.id.toolbar_home)
+        
+        // Navigation Icon (Hamburger) -> Open Drawer
+        toolbar.setNavigationOnClickListener {
+             val drawerLayout = requireActivity().findViewById<androidx.drawerlayout.widget.DrawerLayout>(R.id.drawer_layout)
+             drawerLayout.openDrawer(androidx.core.view.GravityCompat.START)
+        }
+
+        // Menu Item (Share) -> Share Logic
+        toolbar.setOnMenuItemClickListener { menuItem ->
+            when (menuItem.itemId) {
+                R.id.action_share -> {
+                    val quoteContent = textQuote.text.toString()
+                    val quoteAuthor = textAuthor.text.toString()
+                    val shareText = "$quoteContent\n$quoteAuthor\n\n- 來自 QuoteApp"
+
+                    val sendIntent = Intent().apply {
+                        action = Intent.ACTION_SEND
+                        putExtra(Intent.EXTRA_TEXT, shareText)
+                        type = "text/plain"
+                    }
+                    val shareIntent = Intent.createChooser(sendIntent, "分享名言")
+                    startActivity(shareIntent)
+                    true
+                }
+                else -> false
             }
-            val shareIntent = Intent.createChooser(sendIntent, "分享名言")
-            startActivity(shareIntent)
         }
 
         // [關鍵修改] 檢查是否從通知進入
