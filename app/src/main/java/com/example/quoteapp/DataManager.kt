@@ -14,78 +14,87 @@ object DataManager {
         loadSettings(context)
         database = QuoteDatabase.getDatabase(context)
 
-        // 檢查若資料庫是空的，則寫入更多預設名言 (中英文混合)
-        if (database.quoteDao().getCount() == 0) {
-            val defaultQuotes = listOf(
-                // --- 勵志 (Motivation) ---
-                Quote(text = "The only way to do great work is to love what you do.", author = "Steve Jobs", category = "勵志"),
-                Quote(text = "偉大的工作唯一的方法就是熱愛你所做的事。", author = "史蒂夫·賈伯斯", category = "勵志"),
-                Quote(text = "Believe you can and you're halfway there.", author = "Theodore Roosevelt", category = "勵志"),
-                Quote(text = "相信自己，你已經成功了一半。", author = "西奧多·羅斯福", category = "勵志"),
-                Quote(text = "It does not matter how slowly you go as long as you do not stop.", author = "Confucius", category = "勵志"),
-                Quote(text = "不論走得多慢，只要不停止，就一定能到達。", author = "孔子", category = "勵志"),
-                Quote(text = "Failure is the mother of success.", author = "Proverb", category = "勵志"),
-                Quote(text = "失敗為成功之母。", author = "諺語", category = "勵志"),
-                Quote(text = "Your time is limited, don't waste it living someone else’s life.", author = "Steve Jobs", category = "勵志"),
+        // 初始化訪客 (UserID = -1) 的資料
+        initializeUserContent(-1)
+    }
 
-                // --- 人生 (Life) ---
-                Quote(text = "Life is what happens when you're busy making other plans.", author = "John Lennon", category = "人生"),
-                Quote(text = "人生就是當你忙著制定其他計畫時，所發生的事。", author = "約翰·藍儂", category = "人生"),
-                Quote(text = "Get busy living or get busy dying.", author = "Stephen King", category = "人生"),
-                Quote(text = "忙著活，或是忙著死。", author = "史蒂芬·金", category = "人生"),
-                Quote(text = "Life is 10% what happens to us and 90% how we react to it.", author = "Charles R. Swindoll", category = "人生"),
-                Quote(text = "In the middle of difficulty lies opportunity.", author = "Albert Einstein", category = "人生"),
-                Quote(text = "The purpose of our lives is to be happy.", author = "Dalai Lama", category = "人生"),
-                Quote(text = "人生的目的在於追求快樂。", author = "達賴喇嘛", category = "人生"),
-
-                // --- 愛情 (Love) ---
-                Quote(text = "The best thing to hold onto in life is each other.", author = "Audrey Hepburn", category = "愛情"),
-                Quote(text = "生命中最好的依靠是彼此。", author = "奧黛麗·赫本", category = "愛情"),
-                Quote(text = "To love and be loved is to feel the sun from both sides.", author = "David Viscott", category = "愛情"),
-                Quote(text = "愛與被愛，就像從兩面感受陽光。", author = "大衛·維斯考特", category = "愛情"),
-                Quote(text = "Love isn’t something you find. Love is something that finds you.", author = "Loretta Young", category = "愛情"),
-                Quote(text = "Being deeply loved by someone gives you strength.", author = "Lao Tzu", category = "愛情"),
-
-                // --- 工作 (Work) ---
-                Quote(text = "Choose a job you love, and you will never have to work a day in your life.", author = "Confucius", category = "工作"),
-                Quote(text = "選擇一份你熱愛的工作，你這輩子就再也不用工作了。", author = "孔子", category = "工作"),
-                Quote(text = "Success is not the key to happiness. Happiness is the key to success.", author = "Albert Schweitzer", category = "工作"),
-                Quote(text = "成功不是快樂的關鍵，快樂才是成功的關鍵。", author = "阿爾伯特·史懷哲", category = "工作"),
-                Quote(text = "Pleasure in the job puts perfection in the work.", author = "Aristotle", category = "工作"),
-                Quote(text = "樂在工作，才能成就完美。", author = "亞里斯多德", category = "工作"),
-                Quote(text = "Genius is one percent inspiration and ninety-nine percent perspiration.", author = "Thomas Edison", category = "工作"),
-
-                // --- 友誼 (Friendship) ---
-                Quote(text = "A friend is someone who knows all about you and still loves you.", author = "Elbert Hubbard", category = "友誼"),
-                Quote(text = "朋友是那個知道你的一切，卻依然愛你的人。", author = "埃爾伯特·哈伯德", category = "友誼"),
-                Quote(text = "Walking with a friend in the dark is better than walking alone in the light.", author = "Helen Keller", category = "友誼"),
-                Quote(text = "與朋友在黑暗中同行，勝過獨自在光明中行走。", author = "海倫·凱勒", category = "友誼"),
-                Quote(text = "A real friend is one who walks in when the rest of the world walks out.", author = "Walter Winchell", category = "友誼")
-            )
+    // [新增] 初始化指定使用者的預設資料 (若該使用者資料是空的)
+    private fun initializeUserContent(userId: Int) {
+        if (database.quoteDao().getCount(userId) == 0) {
+            val defaultQuotes = getDefaultQuotes(userId)
             defaultQuotes.forEach { database.quoteDao().insertQuote(it) }
         }
 
-        if (database.categoryDao().getCount() == 0) {
-            val defaultCategories = listOf(
-                Category(name = "勵志", imageRes = R.drawable.cat_motivation),
-                Category(name = "人生", imageRes = R.drawable.cat_life),
-                Category(name = "愛情", imageRes = R.drawable.cat_love),
-                Category(name = "工作", imageRes = R.drawable.cat_work),
-                Category(name = "友誼", imageRes = R.drawable.cat_friendship),
-                Category(name = "其他", imageRes = R.drawable.cat_others)
-            )
+        if (database.categoryDao().getCount(userId) == 0) {
+            val defaultCategories = getDefaultCategories(userId)
             defaultCategories.forEach { database.categoryDao().insertCategory(it) }
         }
     }
 
+    private fun getDefaultQuotes(userId: Int): List<Quote> = listOf(
+                // --- 勵志 (Motivation) ---
+                Quote(text = "The only way to do great work is to love what you do.", author = "Steve Jobs", category = "勵志", userId = userId),
+                Quote(text = "偉大的工作唯一的方法就是熱愛你所做的事。", author = "史蒂夫·賈伯斯", category = "勵志", userId = userId),
+                Quote(text = "Believe you can and you're halfway there.", author = "Theodore Roosevelt", category = "勵志", userId = userId),
+                Quote(text = "相信自己，你已經成功了一半。", author = "西奧多·羅斯福", category = "勵志", userId = userId),
+                Quote(text = "It does not matter how slowly you go as long as you do not stop.", author = "Confucius", category = "勵志", userId = userId),
+                Quote(text = "不論走得多慢，只要不停止，就一定能到達。", author = "孔子", category = "勵志", userId = userId),
+                Quote(text = "Failure is the mother of success.", author = "Proverb", category = "勵志", userId = userId),
+                Quote(text = "失敗為成功之母。", author = "諺語", category = "勵志", userId = userId),
+                Quote(text = "Your time is limited, don't waste it living someone else’s life.", author = "Steve Jobs", category = "勵志", userId = userId),
+
+                // --- 人生 (Life) ---
+                Quote(text = "Life is what happens when you're busy making other plans.", author = "John Lennon", category = "人生", userId = userId),
+                Quote(text = "人生就是當你忙著制定其他計畫時，所發生的事。", author = "約翰·藍儂", category = "人生", userId = userId),
+                Quote(text = "Get busy living or get busy dying.", author = "Stephen King", category = "人生", userId = userId),
+                Quote(text = "忙著活，或是忙著死。", author = "史蒂芬·金", category = "人生", userId = userId),
+                Quote(text = "Life is 10% what happens to us and 90% how we react to it.", author = "Charles R. Swindoll", category = "人生", userId = userId),
+                Quote(text = "In the middle of difficulty lies opportunity.", author = "Albert Einstein", category = "人生", userId = userId),
+                Quote(text = "The purpose of our lives is to be happy.", author = "Dalai Lama", category = "人生", userId = userId),
+                Quote(text = "人生的目的在於追求快樂。", author = "達賴喇嘛", category = "人生", userId = userId),
+
+                // --- 愛情 (Love) ---
+                Quote(text = "The best thing to hold onto in life is each other.", author = "Audrey Hepburn", category = "愛情", userId = userId),
+                Quote(text = "生命中最好的依靠是彼此。", author = "奧黛麗·赫本", category = "愛情", userId = userId),
+                Quote(text = "To love and be loved is to feel the sun from both sides.", author = "David Viscott", category = "愛情", userId = userId),
+                Quote(text = "愛與被愛，就像從兩面感受陽光。", author = "大衛·維斯考特", category = "愛情", userId = userId),
+                Quote(text = "Love isn’t something you find. Love is something that finds you.", author = "Loretta Young", category = "愛情", userId = userId),
+                Quote(text = "Being deeply loved by someone gives you strength.", author = "Lao Tzu", category = "愛情", userId = userId),
+
+                // --- 工作 (Work) ---
+                Quote(text = "Choose a job you love, and you will never have to work a day in your life.", author = "Confucius", category = "工作", userId = userId),
+                Quote(text = "選擇一份你熱愛的工作，你這輩子就再也不用工作了。", author = "孔子", category = "工作", userId = userId),
+                Quote(text = "Success is not the key to happiness. Happiness is the key to success.", author = "Albert Schweitzer", category = "工作", userId = userId),
+                Quote(text = "成功不是快樂的關鍵，快樂才是成功的關鍵。", author = "阿爾伯特·史懷哲", category = "工作", userId = userId),
+                Quote(text = "Pleasure in the job puts perfection in the work.", author = "Aristotle", category = "工作", userId = userId),
+                Quote(text = "樂在工作，才能成就完美。", author = "亞里斯多德", category = "工作", userId = userId),
+                Quote(text = "Genius is one percent inspiration and ninety-nine percent perspiration.", author = "Thomas Edison", category = "工作", userId = userId),
+
+                // --- 友誼 (Friendship) ---
+                Quote(text = "A friend is someone who knows all about you and still loves you.", author = "Elbert Hubbard", category = "友誼", userId = userId),
+                Quote(text = "朋友是那個知道你的一切，卻依然愛你的人。", author = "埃爾伯特·哈伯德", category = "友誼", userId = userId),
+                Quote(text = "Walking with a friend in the dark is better than walking alone in the light.", author = "Helen Keller", category = "友誼", userId = userId),
+                Quote(text = "與朋友在黑暗中同行，勝過獨自在光明中行走。", author = "海倫·凱勒", category = "友誼", userId = userId),
+                Quote(text = "A real friend is one who walks in when the rest of the world walks out.", author = "Walter Winchell", category = "友誼", userId = userId)
+            )
+    
+    private fun getDefaultCategories(userId: Int): List<Category> = listOf(
+        Category(name = "勵志", imageRes = R.drawable.cat_motivation, userId = userId),
+        Category(name = "人生", imageRes = R.drawable.cat_life, userId = userId),
+        Category(name = "愛情", imageRes = R.drawable.cat_love, userId = userId),
+        Category(name = "工作", imageRes = R.drawable.cat_work, userId = userId),
+        Category(name = "友誼", imageRes = R.drawable.cat_friendship, userId = userId),
+        Category(name = "其他", imageRes = R.drawable.cat_others, userId = userId)
+    )
+
     val categories: List<Category>
-        get() = database.categoryDao().getAllCategories()
+        get() = database.categoryDao().getAllCategories(currentUserId)
 
     val quotes: List<Quote>
-        get() = database.quoteDao().getAllQuotes()
+        get() = database.quoteDao().getAllQuotes(currentUserId)
 
     val favorites: List<Quote>
-        get() = database.quoteDao().getFavoriteQuotes()
+        get() = database.quoteDao().getFavoriteQuotes(currentUserId)
 
     var fontSize: Float = 18f
     var isDarkMode: Boolean = false
@@ -153,20 +162,20 @@ object DataManager {
     }
 
     fun addCategory(name: String, iconRes: Int, imageUri: String? = null) {
-        if (database.categoryDao().getCountByName(name) == 0) {
-            val newCategory = Category(name = name, imageRes = iconRes, imageUri = imageUri)
+        if (database.categoryDao().getCountByName(name, currentUserId) == 0) {
+            val newCategory = Category(name = name, imageRes = iconRes, imageUri = imageUri, userId = currentUserId)
             database.categoryDao().insertCategory(newCategory)
         }
     }
 
     fun deleteCategory(category: Category) {
-        val quotesToDelete = database.quoteDao().getQuotesByCategory(category.name)
+        val quotesToDelete = database.quoteDao().getQuotesByCategory(category.name, currentUserId)
         quotesToDelete.forEach { database.quoteDao().deleteQuote(it) }
         database.categoryDao().deleteCategory(category)
     }
 
     fun addQuote(text: String, author: String, category: String) {
-        val newQuote = Quote(text = text, author = author, category = category)
+        val newQuote = Quote(text = text, author = author, category = category, userId = currentUserId)
         database.quoteDao().insertQuote(newQuote)
     }
 
@@ -207,14 +216,16 @@ object DataManager {
         return true
     }
 
-    fun register(username: String, email: String, password: String): Boolean {
+    fun register(username: String, email: String, password: String, avatarResId: Int, avatarUri: String? = null): Boolean {
         val normalizedEmail = email.lowercase()
         val existing = database.userDao().getUserByEmail(normalizedEmail)
         if (existing != null) return false // Email taken
 
-        val newUser = User(username = username, email = normalizedEmail, password = password)
+        val newUser = User(username = username, email = normalizedEmail, password = password, avatarResId = avatarResId, avatarUri = avatarUri)
         val id = database.userDao().insertUser(newUser)
         if (id > 0) {
+            // [關鍵] 註冊成功後，為新使用者初始化預設名言和分類
+            initializeUserContent(id.toInt())
             login(normalizedEmail, password) // Auto login after register
             return true
         }
@@ -230,6 +241,14 @@ object DataManager {
     fun getCurrentUser(): User? {
         if (!isLoggedIn || currentUserId == -1) return null
         return database.userDao().getUserById(currentUserId)
+    }
+
+    fun updateUserAvatar(uri: String) {
+        val user = getCurrentUser()
+        if (user != null) {
+            val updatedUser = user.copy(avatarUri = uri)
+            database.userDao().updateUser(updatedUser)
+        }
     }
 
     private fun saveUserSession() {

@@ -10,11 +10,82 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Create Account"
+        android:text="建立帳戶"
         android:textSize="28sp"
         android:textStyle="bold"
         android:layout_marginBottom="32dp"
         android:textColor="?attr/colorOnSurface"/>
+
+    <!-- Avatar Selection -->
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="選擇頭貼"
+        android:textStyle="bold"
+        android:layout_marginBottom="12dp"
+        android:textColor="?attr/colorOnSurface"/>
+
+    <HorizontalScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:scrollbars="none"
+        android:layout_marginBottom="24dp">
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical">
+
+            <ImageView
+                android:id="@+id/iv_avatar_1"
+                android:layout_width="60dp"
+                android:layout_height="60dp"
+                android:src="@drawable/ic_avatar_1"
+                android:padding="4dp"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:layout_marginEnd="16dp"
+                android:contentDescription="Avatar 1"/>
+
+            <ImageView
+                android:id="@+id/iv_avatar_2"
+                android:layout_width="60dp"
+                android:layout_height="60dp"
+                android:src="@drawable/ic_avatar_2"
+                android:padding="4dp"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:layout_marginEnd="16dp"
+                android:contentDescription="Avatar 2"/>
+
+            <ImageView
+                android:id="@+id/iv_avatar_3"
+                android:layout_width="60dp"
+                android:layout_height="60dp"
+                android:src="@drawable/ic_avatar_3"
+                android:padding="4dp"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:layout_marginEnd="16dp"
+                android:contentDescription="Avatar 3"/>
+
+            <ImageView
+                android:id="@+id/iv_avatar_4"
+                android:layout_width="60dp"
+                android:layout_height="60dp"
+                android:src="@drawable/ic_avatar_4"
+                android:padding="4dp"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:contentDescription="Avatar 4"/>
+
+        </LinearLayout>
+    </HorizontalScrollView>
+
+    <Button
+        android:id="@+id/btn_select_gallery"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="從相簿選擇"
+        style="@style/Widget.MaterialComponents.Button.TextButton"
+        android:layout_marginBottom="16dp"/>
 
     <com.google.android.material.textfield.TextInputLayout
         android:layout_width="match_parent"
@@ -59,14 +130,14 @@
         android:id="@+id/btn_register"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Register"
+        android:text="註冊"
         android:layout_marginBottom="16dp"/>
 
     <TextView
         android:id="@+id/tv_go_to_login"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Already have an account? Login"
+        android:text="已經有帳號？ 登入"
         android:textColor="?attr/colorPrimary"/>
 
 </LinearLayout>

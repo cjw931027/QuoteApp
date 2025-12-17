@@ -53,7 +53,7 @@ class LoginFragment : Fragment() {
             val password = etPassword.text.toString().trim()
 
             if (email.isEmpty() || password.isEmpty()) {
-                Toast.makeText(context, "Please fill all fields", Toast.LENGTH_SHORT).show()
+                Toast.makeText(context, "請填寫所有欄位", Toast.LENGTH_SHORT).show()
                 return@setOnClickListener
             }
 
@@ -61,7 +61,7 @@ class LoginFragment : Fragment() {
             if (user != null) {
                 navigateToHome()
             } else {
-                Toast.makeText(context, "Invalid credentials", Toast.LENGTH_SHORT).show()
+                Toast.makeText(context, "Email 或密碼錯誤", Toast.LENGTH_SHORT).show()
             }
         }
 

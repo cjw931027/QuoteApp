@@ -48,11 +48,8 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
 
         val toolbar = view.findViewById<com.google.android.material.appbar.MaterialToolbar>(R.id.toolbar_home)
         
-        // Navigation Icon (Hamburger) -> Open Drawer
-        toolbar.setNavigationOnClickListener {
-             val drawerLayout = requireActivity().findViewById<androidx.drawerlayout.widget.DrawerLayout>(R.id.drawer_layout)
-             drawerLayout.openDrawer(androidx.core.view.GravityCompat.START)
-        }
+        // Navigation Icon (Hamburger) -> Removed as Drawer is gone
+        // toolbar.setNavigationOnClickListener { ... }
 
         // Menu Item (Share) -> Share Logic
         toolbar.setOnMenuItemClickListener { menuItem ->

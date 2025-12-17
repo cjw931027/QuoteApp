@@ -10,6 +10,9 @@ interface UserDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insertUser(user: User): Long
 
+    @androidx.room.Update
+    fun updateUser(user: User)
+
     @Query("SELECT * FROM users WHERE email = :email LIMIT 1")
     fun getUserByEmail(email: String): User?
 

@@ -18,8 +18,6 @@
         app:title="主頁"
         app:titleCentered="true"
         app:titleTextColor="?android:attr/textColorPrimary"
-        app:navigationIcon="@drawable/ic_hamburger"
-        app:navigationIconTint="?android:attr/textColorPrimary"
         app:menu="@menu/menu_home"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"

@@ -8,8 +8,8 @@ import com.example.quoteapp.Category
 import com.example.quoteapp.Quote
 
 // 1. 在 entities 中加入 Category::class
-// 2. 將 version 版本號升級為 2 (因為更動了資料結構)
-@Database(entities = [Quote::class, Category::class, User::class], version = 3, exportSchema = false)
+// 2. 將 version 版本號升級為 6 (因為更動了引用這的資料結構)
+@Database(entities = [Quote::class, Category::class, User::class], version = 6, exportSchema = false)
 abstract class QuoteDatabase : RoomDatabase() {
 
     abstract fun quoteDao(): QuoteDao

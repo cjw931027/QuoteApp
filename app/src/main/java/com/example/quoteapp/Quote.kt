@@ -10,5 +10,6 @@ data class Quote(
     val text: String,
     val author: String,
     val category: String,
-    var isFavorite: Boolean = false // 直接在資料庫記錄是否收藏
+    var isFavorite: Boolean = false, // 直接在資料庫記錄是否收藏
+    val userId: Int = -1 // 加入 User ID 以區分資料 (預設 -1 為訪客/系統)
 )
