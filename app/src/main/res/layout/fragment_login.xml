@@ -35,12 +35,12 @@
             android:textColor="?attr/colorOnSurface"
             android:layout_marginBottom="8dp"/>
 
-        <!-- Email Field -->
+        <!-- Username Field -->
         <com.google.android.material.textfield.TextInputLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="Username"
-            app:startIconDrawable="@android:drawable/ic_dialog_email"
+            app:startIconDrawable="@drawable/ic_avatar_1"
             app:startIconTint="?attr/colorPrimary"
             style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
             app:boxCornerRadiusTopStart="12dp"
@@ -50,10 +50,10 @@
             android:layout_marginBottom="16dp">
 
             <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/et_login_email"
+                android:id="@+id/et_login_username"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:inputType="textEmailAddress"
+                android:inputType="text"
                 android:textColor="?attr/colorOnSurface"/>
         </com.google.android.material.textfield.TextInputLayout>
 

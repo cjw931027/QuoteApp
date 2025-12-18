@@ -43,25 +43,25 @@ class LoginFragment : Fragment() {
             return
         }
 
-        val etEmail = view.findViewById<TextInputEditText>(R.id.et_login_email)
+        val etUsername = view.findViewById<TextInputEditText>(R.id.et_login_username)
         val etPassword = view.findViewById<TextInputEditText>(R.id.et_login_password)
         val btnLogin = view.findViewById<Button>(R.id.btn_login)
         val tvGoToRegister = view.findViewById<TextView>(R.id.tv_go_to_register)
 
         btnLogin.setOnClickListener {
-            val email = etEmail.text.toString().trim()
+            val username = etUsername.text.toString().trim()
             val password = etPassword.text.toString().trim()
 
-            if (email.isEmpty() || password.isEmpty()) {
+            if (username.isEmpty() || password.isEmpty()) {
                 Toast.makeText(context, "請填寫所有欄位", Toast.LENGTH_SHORT).show()
                 return@setOnClickListener
             }
 
-            val user = DataManager.login(email, password)
+            val user = DataManager.login(username, password)
             if (user != null) {
                 navigateToHome()
             } else {
-                Toast.makeText(context, "Email 或密碼錯誤", Toast.LENGTH_SHORT).show()
+                Toast.makeText(context, "Username 或密碼錯誤", Toast.LENGTH_SHORT).show()
             }
         }
 

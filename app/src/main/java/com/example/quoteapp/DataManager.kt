@@ -194,9 +194,8 @@ object DataManager {
     var currentUserId: Int = -1
         private set
 
-    fun login(email: String, password: String): User? {
-        val normalizedEmail = email.lowercase()
-        val user = database.userDao().getUserByEmail(normalizedEmail)
+    fun login(username: String, password: String): User? {
+        val user = database.userDao().getUserByUsername(username)
         if (user != null && user.password == password) {
             isLoggedIn = true
             currentUserId = user.id
@@ -217,16 +216,22 @@ object DataManager {
     }
 
     fun register(username: String, email: String, password: String, avatarResId: Int, avatarUri: String? = null): Boolean {
+        // Check if username already exists
+        val existingUser = database.userDao().getUserByUsername(username)
+        if (existingUser != null) return false // Username taken
+
         val normalizedEmail = email.lowercase()
-        val existing = database.userDao().getUserByEmail(normalizedEmail)
-        if (existing != null) return false // Email taken
+        // Optional: still check email if we want unique emails too, but user asked for username login.
+        // Let's keep email check to avoid confusion/duplicates, but primary is username now for login.
+        val existingEmail = database.userDao().getUserByEmail(normalizedEmail)
+        if (existingEmail != null) return false
 
         val newUser = User(username = username, email = normalizedEmail, password = password, avatarResId = avatarResId, avatarUri = avatarUri)
         val id = database.userDao().insertUser(newUser)
         if (id > 0) {
             // [關鍵] 註冊成功後，為新使用者初始化預設名言和分類
             initializeUserContent(id.toInt())
-            login(normalizedEmail, password) // Auto login after register
+            login(username, password) // Auto login after register
             return true
         }
         return false
