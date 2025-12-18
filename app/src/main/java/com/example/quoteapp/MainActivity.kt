@@ -83,7 +83,7 @@ class MainActivity : AppCompatActivity() {
                 }
                 R.id.addQuoteFragment, R.id.addCategoryFragment -> {
                     bottomNav.visibility = View.GONE
-                    toolbar.visibility = View.VISIBLE
+                    toolbar.visibility = View.GONE
                 }
                 else -> {
                     bottomNav.visibility = View.VISIBLE
